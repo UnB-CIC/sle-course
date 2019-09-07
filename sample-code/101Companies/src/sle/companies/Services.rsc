@@ -10,6 +10,7 @@
 module sle::companies::Services
 
 import sle::companies::DataModel;
+import List;
 
 /**
  * computes the total salaries of a company
@@ -30,3 +31,15 @@ public Company increaseSalary(real inc, Company company) =
   top-down visit(company){
 	 case Salary salary => salary + (salary * inc) // this is really cool.
   };
+  
+/*
+ Find the highest Salary at a company.
+*/
+
+public real findHighestSalary(Company company){
+	  real wage = 0.0;
+	  top-down visit(company){
+		 case Salary salary: if( salary > wage ) wage = salary;
+	  }
+	  return wage;
+  }
