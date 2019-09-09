@@ -1,0 +1,393 @@
+\documentclass{beamer}
+
+\usepackage{lstcustom} 
+
+\lstdefinelanguage{Rascal}[]{Java}{
+  morekeywords={module, syntax, start, data, visitor},
+  moredelim=[is][\textcolor{darkgray}]{\%\%}{\%\%},
+  moredelim=[il][\textcolor{darkgray}]{§§}
+}
+
+\lstdefinelanguage{FSM}[]{Java}{
+  morekeywords={initial, state},
+  moredelim=[is][\textcolor{darkgray}]{\%\%}{\%\%},
+  moredelim=[il][\textcolor{darkgray}]{§§}
+}
+
+\title{Rascal-MPL \\ A Short Introduction}
+\subtitle{Slides Based on the P. Klint's Introductory Course on Rascal}
+
+\author{Rodrigo Bonif\'{a}cio}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+  \begin{quote}
+Rascal is an experimental domain specific language for metaprogramming, such as static code analysis, program transformation and implementation of domain specific languages. It is a general meta language in the sense that it does not have a bias for any particular software language.
+  \end{quote}
+  \flushright{Wikipedia}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Domain}
+    Rascal-MPL allows a developer
+    to create full-fledged program
+    analysis and manipulation tools,
+    including support for syntax
+    definition and strategic programming. 
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Features}
+
+  \begin{itemize}
+    \item hybrid programming model (imperative and functional styles)
+    \item immutable data structures and support for generic types
+    \item pattern matching and visitors using different strategies
+    \item syntax definitions and parsing + REPL support  
+    \item Java and Eclipse integration  
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{ColoredTrees}
+
+  \begin{small}
+  \begin{lstlisting}[language=Rascal]
+module ColoredTrees
+
+data CTree = leaf(int N)
+           | red(CTree left, CTree right)
+           | black(CTree left, CTree right)
+           ;
+
+
+CTree sample() = red(black(leaf(1), red(leaf(2), leaf(3))),
+                     black(leaf(4), leaf(5))); 
+\end{lstlisting}
+  \end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pattern Matching (switch-case)}
+
+  \begin{block}{Number of elements of a tree}
+    \begin{small}
+    \begin{lstlisting}[language=Rascal]
+    int elements(CTree tree) {
+      int res = 0;
+      switch(tree) {
+        case leaf(n): res = 1;
+        case red(l, r): res = 1 + elements(l) + elements(r);
+        case black(l, r):  res = 1 + elements(l) + elements(r);
+      }
+      return res;
+    }
+\end{lstlisting}
+    \end{small}xs
+  \end{block}  
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pattern Matching (visitor to collect information)}
+
+  \begin{block}{Total of values in a tree}
+    \begin{small}
+\begin{lstlisting}[language=Rascal]
+    int sumTree(CTree tree) {
+      int res = 0;
+      top-down visit (tree) {
+        case leaf(n): res = res + n;
+      }
+      return res;
+    }
+\end{lstlisting}
+\end{small}
+  \end{block}\pause
+
+  \begin{itemize}
+    \item Traversal strategies
+      \begin{itemize}
+        \item top-down visit (top-down-break)
+        \item bottom-up visit (bottom-up-break)
+        \item innermost
+        \item outermost  
+      \end{itemize}  
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pattern Matching (visitor to transform a tree)}
+
+  \begin{block}{Increment all leaves}
+    \begin{lstlisting}[language=Rascal]
+    CTree increment(CTree tree) =
+      top-down visit (tree) {
+        case leaf(n) => leaf(n + 1)
+      };
+    \end{lstlisting}  
+  \end{block}\pause
+
+  \begin{block}{Change first black to red}
+    \begin{lstlisting}[language=Rascal]
+    CTree changeFirstBlack(CTree tree) =
+      top-down-break visit (tree) {
+        case black(l, r) => red(l, r)
+      };
+    \end{lstlisting}  
+  \end{block}\pause
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Comprehension}
+
+  \begin{lstlisting}[language=Rascal]
+    GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+    Prelude> let list = [1..10]
+    Prelude> [x * x | x <- list, even x]
+    [4,16,36,64,100]    
+  \end{lstlisting}
+  
+  Comprehension is available in many programming languages\pause,
+  including Haskell, Python, Rascal, and so on.
+
+  \begin{block}{Rascal combines comprehension and generic traversals}
+   \begin{lstlisting}[language=Rascal]
+     rascal> [n | /leaf(int n) <- sample()];
+     list[int]: [1,2,3,4,5]
+   \end{lstlisting}
+  \end{block}
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Export to DOT: String Interpolation (1/3)}
+
+    \begin{lstlisting}[language=Rascal]
+    str export(CTree t) {
+      str g = "digraph g { \n";
+        int id = 0;
+        map[CTree, str] decls = ();
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Export to DOT: String Interpolation (2/3)}
+
+  \begin{small}
+    \begin{lstlisting}[language=Rascal]
+        // print the nodes
+        top-down visit(t) {
+          case red(l, r) :
+          {
+            id = id + 1;
+            g += "  n<id> [label = \"\" shape = circle fillcolor = red style = filled]\n";
+            decls += (red(l,r) : "n<id>");
+          }
+          case black(l, r) :
+          {
+            id = id + 1;
+            g += "  n<id> [label = \"\" shape = circle fillcolor = black style = filled]\n";
+            decls += (black(l,r) : "n<id>");
+          }
+          case leaf(n) :
+          {
+            id = id + 1;
+            g = g + "  n<id> [label = <n>] \n";
+            decls += (leaf(n) : "n<id>");
+          }
+        };
+\end{lstlisting}
+  \end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Export to DOT: String Interpolation (3/3)}
+  \begin{small}
+    \begin{lstlisting}[language=Rascal]
+        // print the edges
+        top-down visit(t) {
+          case red(l, r) : {
+            g += "  <decls[red(l,r)]> -\> <decls[l]> \n";
+            g += "  <decls[red(l,r)]> -\> <decls[r]> \n";
+          }
+          case black(l, r) : {
+            g += "  <decls[black(l,r)]> -\> <decls[l]> \n";
+            g += "  <decls[black(l,r)]> -\> <decls[r]> \n";
+          }
+        }
+
+        g += "}";
+
+      return g;
+    }
+  \end{lstlisting}  
+  \end{small}  
+\end{frame}
+
+
+\begin{frame}
+\begin{huge}
+Syntax Definition
+\end{huge}
+\pause 
+\vskip+1.5em
+\begin{itemize}
+\item converts a grammar into a SGLR parser
+\item main components (context free grammar) 
+\begin{itemize}
+  \item syntax expressed using production rules
+  \item lexical, layout, and keyword definitions
+\end{itemize} \pause
+\item challenge: disambiguation
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Let's consider a language for FSMs} 
+
+\begin{lstlisting}[language=Rascal]
+module lang::fsm::AbstractSyntax
+
+data StateMachine 
+  = fsm(list[State] states, list[Transition] transitions);
+
+data State 
+  = state(str name)
+  | startState(str name)
+  ;
+           
+data Transition 
+  = transition(str source, Event event, str target);
+  
+data Event 
+  = event(str evt)
+  | eventWithAction(str evt, str action)
+  ;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Example of a FSM specification}
+
+ \begin{lstlisting}[language=FSM]
+initial state locked {
+  ticket/collect -> unlocked;
+  pass/alarm -> exception;
+}
+
+state unlocked {
+  ticket/eject;
+  pass -> locked;
+}
+
+state exception {
+  ticket/eject;
+  pass;
+  mute;
+  release -> locked;
+}
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A grammar definition for FSMs using Rascal}
+
+\begin{lstlisting}[language=Rascal]
+module lang::fsm::ConcreteSyntax
+
+start syntax FSM = CState* states;
+
+syntax CState 
+  = initialState: "initial" "state" Id "{" CEvent* "}"
+  | basicState: "state" Id "{" CEvent* "}"
+  ;
+
+syntax CEvent 
+  = basicEvent: Id ("-\>" Id)? ";"
+  | actionEvent: Id "/" Id ("-\>" Id)? ";"
+  ; 
+
+lexical Id = [a-zA-Z][_a-zA-Z0-9]*; 
+
+lexical Comment = "//" ![\n]* [\n];
+
+lexical Spaces = [\n\r\f\t\ ]*;
+
+layout Layout = Spaces 
+              | Comment 
+              ; 
+
+keyword Keywords = "state" | "initial" ;
+\end{lstlisting} 
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A parser from Concrete Syntax to Abstract Syntax (1/2)}
+
+\begin{lstlisting}[language=Rascal]
+module lang::fsm::Parser
+
+import ParseTree;
+import IO;
+
+import lang::fsm::ConcreteSyntax;
+import lang::fsm::AbstractSyntax; 
+
+public StateMachine parseFSM(str f) {
+ loc file = |file:///| + f;
+ list[State] states = [];
+ list[Transition] transitions = [];
+ 
+ start[FSM] parseResult = parse(#start[FSM], file);
+ 
+ top-down visit (parseResult) {
+    case (CState)`initial state <Id id> { <CEvent* evts>}`: {
+      states += startState(unparse(id));
+      transitions += parseEvents(id, evts);
+    }
+    case (CState)`state <Id id> { <CEvent* evts>}`: {
+      states += state(unparse(id));
+      transitions += parseEvents(id, evts);
+    }
+ };
+ 
+ return fsm(states, transitions);
+}
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A parser from Concrete Syntax to Abstract Syntax (2/2)}
+
+\begin{lstlisting}[language=Rascal]
+list[Transition] parseEvents(Id source, CEvent* evts) {
+  list[Transition] ts = [];
+  top-down visit(evts) {
+    case (CEvent)`<Id e> -\> <Id target>;` : 
+      ts += transition(unparse(source), event(unparse(e)), unparse(target));
+    case (CEvent)`<Id e>;` : 
+      ts += transition(unparse(source), event(unparse(e)), unparse(source));
+    case (CEvent)`<Id e> / <Id a> -\> <Id target>;` : 
+      ts += transition(unparse(source), eventWithAction(unparse(e), unparse(a)), unparse(target));
+    case (CEvent)`<Id e> / <Id a>;` : 
+      ts += transition(unparse(source), eventWithAction(unparse(e), unparse(a)), unparse(source));
+  }
+  return ts;
+}
+\end{lstlisting}
+
+\end{frame}
+
+\end{document}
