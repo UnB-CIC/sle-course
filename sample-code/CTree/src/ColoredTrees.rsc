@@ -36,7 +36,7 @@ CTree increment(CTree tree) =
 data CTree = green(CTree l, CTree r); 
 	
 CTree changeFirstBlack(CTree tree) {
-  return bottom-up-break visit (tree) {
+  return top-down-break visit (tree) {
     case black(CTree l, CTree r) => green(l, r)
   };
 }
@@ -86,7 +86,7 @@ str export(CTree t) {
 }
   
 
-CTree sample() = red(black(leaf(1), red(leaf(2), leaf(3))),
+CTree sample() = red(black(leaf(1), black(leaf(2), leaf(3))),
                      black(leaf(4), leaf(5))); 
                      
                      
