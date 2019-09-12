@@ -10,6 +10,7 @@
 module sle::companies::Services
 
 import sle::companies::DataModel;
+import sle::lib::\list;
 import List;
 
 /**
@@ -20,7 +21,7 @@ public real totalSalary(Company c) = sum([s | /Salary s <- c]);
 /**
  * finds the highest Salary of a company.
  */
-public real findHighestSalary(Company c) = max([s | /Salary s <- c]); 
+public real highestSalary(Company c) = max([s | /Salary s <- c]); 
 
 /**
  * "increases" all salaries of a company. the question is, 
@@ -31,6 +32,10 @@ public Company increaseSalary(real inc, Company company) =
 	 case Salary salary => salary + (salary * inc) // this is really cool.
   };
   
+  
+public num avgSalary(Company company) = avg([s | /Salary s <- company]);
+
+public set[str] setEmployeeNames(Company c) = ({e.name | /Employee e<- c});
 
 //---------------------- Alternative Implementations ----------------------
 
