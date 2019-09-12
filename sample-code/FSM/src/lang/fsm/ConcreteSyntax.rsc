@@ -1,10 +1,5 @@
 module lang::fsm::ConcreteSyntax
 
-import IO;
-import ParseTree; 
-
-import lang::fsm::AbstractSyntax; 
-
 start syntax FSM = CState* states;
 
 syntax CState 
