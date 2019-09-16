@@ -11,3 +11,5 @@ test bool testMultipleInitialState() = 1 != initialStates(acme);
 
 test bool testReachableState() = reachableState(acme);
 test bool testUnreachableState() = false == reachableState(acme);
+
+list[Transition] testShowAmbiguos() = showAmbiguos(acme);

@@ -18,3 +18,9 @@ int initialStates(StateMachine sm) = size([s | State s <- sm.states, startElemen
 //}
 
 bool reachableState(StateMachine sm) = toSet(sm.states) == toSet([t.target | Transition t <- sm.transitions]);
+
+public list[Transition] listEquals (list[Transition] l) = isEmpty(l) ? [] :findEqualsC(head(l),tail(l))+listEquals(tail(l));
+
+list[Transition] findEqualsC(Transition t,list[Transition] lt){
+	return [X | Transition X <- lt,(X.source==t.source) && (X.event==t.event)];
+}
