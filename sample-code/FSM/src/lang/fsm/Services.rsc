@@ -1,7 +1,7 @@
 module lang::fsm::Services
 
 import lang::fsm::AbstractSyntax;
-
+import Set;
 import List;
 
 int initialStates(StateMachine sm) = size([s | State s <- sm.states, startElement(s) == 1]);
@@ -18,6 +18,9 @@ int initialStates(StateMachine sm) = size([s | State s <- sm.states, startElemen
 //}
 
 bool reachableState(StateMachine sm) = toSet(sm.states) == toSet([t.target | Transition t <- sm.transitions]);
+
+bool distinctStates(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]);
+
 
 public list[Transition] listEquals (list[Transition] l) = isEmpty(l) ? [] :findEqualsC(head(l),tail(l))+listEquals(tail(l));
 
