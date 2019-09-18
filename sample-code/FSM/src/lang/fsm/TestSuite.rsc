@@ -2,7 +2,6 @@ module lang::fsm::TestSuite
 
 import lang::fsm::AbstractSyntax;
 import lang::fsm::Sample;
-import lang::fsm::Services;
 import lang::fsm::WFR;
 import Set;
 import List;

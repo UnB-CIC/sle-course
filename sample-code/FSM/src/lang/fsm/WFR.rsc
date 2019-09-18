@@ -25,7 +25,7 @@ bool reachableState(StateMachine sm) {
 	return toSet(reachables(sm, initialState[0])) == toSet(sm.states);
 }
 
-//Help functions to identify WFR: 
+//Help functions to identify WFR: -------------------------------------------------------------------------------------
 
 int startElement(startState(_)) = 1;
 int startElement(state(_)) = 0;
