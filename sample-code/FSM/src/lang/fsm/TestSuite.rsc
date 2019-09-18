@@ -6,10 +6,10 @@ import lang::fsm::Services;
 import List;
 
 test bool testSingleInitialState() = 1 == initialStates(acme); 
-
 test bool testMultipleInitialState() = 1 != initialStates(acme); 
 
 test bool testReachableState() = reachableState(acme);
 test bool testUnreachableState() = false == reachableState(acme);
 
-list[Transition] testShowAmbiguos() = showAmbiguos(showListTransitions(acme));
+test bool testDeterministicTransitions() = deterministicTransitions(acme);
+test bool testDeterministicTransitions() = false == deterministicTransitions(acme);
