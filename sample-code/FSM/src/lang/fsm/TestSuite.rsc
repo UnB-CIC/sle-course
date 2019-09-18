@@ -7,7 +7,6 @@ import lang::fsm::WFR;
 import Set;
 import List;
 
-
 test bool testSingleInitialState() = true == singleInitialState(acme); 
 test bool testMultipleInitialState() = false == singleInitialState(acme); 
 
@@ -20,4 +19,6 @@ test bool testDuplicatedStates() = false == distinctStates(acme);
 test bool testReachableState() = reachableState(acme);
 test bool testUnreachableState() = false == reachableState(acme);
 
-//list[Transition] testShowAmbiguos() = showAmbiguos(acme);
+test bool testDeterministicTransitions() = deterministicTransitions(acme);
+test bool testDeterministicTransitions() = false == deterministicTransitions(acme);
+

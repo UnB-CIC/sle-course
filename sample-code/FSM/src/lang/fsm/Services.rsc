@@ -5,25 +5,6 @@ import Set;
 import List;
 import IO;
 
-
-//int initialStates(StateMachine sm){
-//	int res =0;
-//	top-down visit(sm.states){
-//	
-//		case startState(n): res= res+1;
-//	}
-//	return res;
-//}
-
-bool distinctStates(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]);
-
-
-public list[Transition] listEquals (list[Transition] l) = isEmpty(l) ? [] :findEqualsC(head(l),tail(l))+listEquals(tail(l));
-
-list[Transition] findEqualsC(Transition t,list[Transition] lt){
-	return [X | Transition X <- lt,(X.source==t.source) && (X.event==t.event)];
-}
-
 @doc { To test, use: https://dreampuf.github.io/GraphvizOnline}
 public str toDot(StateMachine fsm) {
 	str g = "digraph g{ \n";
@@ -39,3 +20,12 @@ public str toDot(StateMachine fsm) {
 	return "";
 	
 }
+
+bool deterministicTransitions(StateMachine sm) = showAmbiguos(showListTransitions(sm))==[];
+public list[Transition] showAmbiguos (list[Transition] l) = isEmpty(l) ? [] :findAmbiguos(head(l),tail(l))+showAmbiguos(tail(l));
+list[Transition] findAmbiguos(Transition t,list[Transition] lt) = [X | Transition X <- lt,(X.source==t.source) && (X.event==t.event)];
+/**
+ * finds and show all the Transition.
+ */
+public list[Transition] showListTransitions(StateMachine sm) = ([t | /Transition t <- sm]);
+
