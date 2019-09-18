@@ -11,10 +11,13 @@ import List;
 test bool testSingleInitialState() = true == singleInitialState(acme); 
 test bool testMultipleInitialState() = false == singleInitialState(acme); 
 
-test bool testReachableState() = reachableState(acme);
-test bool testUnreachableState() = false == reachableState(acme);
+test bool testResolvableTargetState() = resolvableTargetState(acme);
+test bool testUnresolvableTargetState() = false == resolvableTargetState(acme);
 
 test bool testDistinctStates() = distinctStates(acme);
 test bool testDuplicatedStates() = false == distinctStates(acme);
+
+test bool testReachableState() = reachableState(acme);
+test bool testUnreachableState() = false == reachableState(acme);
 
 //list[Transition] testShowAmbiguos() = showAmbiguos(acme);
