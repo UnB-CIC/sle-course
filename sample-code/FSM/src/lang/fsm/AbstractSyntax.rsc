@@ -9,7 +9,7 @@ data State
   ;
            
 data Transition 
-  = transition(str source, Event event, str target);
+  = transition(State source, Event event, State target);
   
 data Event 
   = event(str evt)
