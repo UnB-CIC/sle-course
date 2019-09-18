@@ -15,8 +15,6 @@ import IO;
 //	return res;
 //}
 
-bool reachableState(StateMachine sm) = toSet(sm.states) == toSet([t.target | Transition t <- sm.transitions]);
-
 bool distinctStates(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]);
 
 
