@@ -20,5 +20,5 @@ test bool testReachableState() = reachableState(acme);
 test bool testUnreachableState() = false == reachableState(acme);
 
 test bool testDeterministicTransitions() = deterministicTransitions(acme);
-test bool testDeterministicTransitions() = false == deterministicTransitions(acme);
+test bool testIndeterministicTransitions() = false == deterministicTransitions(acme);
 
