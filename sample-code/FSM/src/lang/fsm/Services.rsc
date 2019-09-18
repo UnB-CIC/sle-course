@@ -5,9 +5,6 @@ import Set;
 import List;
 import IO;
 
-int initialStates(StateMachine sm) = size([s | State s <- sm.states, startElement(s) == 1]);
-	int startElement(startState(_)) = 1;
-	int startElement(state(_)) = 0;
 
 //int initialStates(StateMachine sm){
 //	int res =0;
