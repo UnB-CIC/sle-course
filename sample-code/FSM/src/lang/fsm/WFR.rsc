@@ -5,16 +5,15 @@ import List;
 import Set;
 import lang::fsm::AbstractSyntax; 
 
-data Error = moreThanOneStartState()
+data Error = noUniqueStartState(list[State] initialStates)
            | unresolvableTargetState()
-           | noStartState()
            | ambiguousTransitions(list[Transition] transitions)
            | unreachableStates();
 
 
-bool singleInitialState(StateMachine sm) = 1 == size(startStates(sm));
+list[Error] singleInitialState(StateMachine sm) = 1 == size(startStates(sm)) ? [] :  [noUniqueStartState(startStates(sm))];
 
-bool resolvableTargetState(StateMachine sm) = toSet([t.target | Transition t <- sm.transitions]) <= toSet(sm.states);
+bool resolvableTargetState(StateMachine sm) = toSet([t.target | Transition t <- sm.transitions]) == toSet(sm.states);
 
 bool distinctStates(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]);
 

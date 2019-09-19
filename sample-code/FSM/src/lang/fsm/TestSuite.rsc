@@ -6,7 +6,7 @@ import lang::fsm::WFR;
 import Set;
 import List;
 
-test bool testSingleInitialState() = true == singleInitialState(acme); 
+test bool testSingleInitialState() = 0 == size(singleInitialState(acme)); 
 
 test bool testResolvableTargetState() = resolvableTargetState(acme);
 
