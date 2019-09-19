@@ -28,7 +28,12 @@ Transition transPass_e_e = transition(exception,pass,exception);
 //ambiguos transition
 Transition transPass_e_u = transition(exception,pass,unlocked);
 
-public StateMachine acme = fsm([locked, unlocked,unlocked2, exception],
+public StateMachine acme = fsm([locked, unlocked, exception],
 								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
 								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e]);
+ 
+ 
+public StateMachine failedAcme = fsm([locked, unlocked,unlocked2, exception],
+								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
+								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e,transPass_e_u]);
  
