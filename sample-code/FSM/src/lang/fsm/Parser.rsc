@@ -30,10 +30,10 @@ public StateMachine parseFSM(str f) {
 list[Transition] parseEvents(Id source, CEvent* evts) {
   list[Transition] ts = [];
   top-down visit(evts) {
-  	case (CEvent)`<Id e> -\> <Id target>;` : ts += transition(unparse(source), event(unparse(e)), unparse(target));
-  	case (CEvent)`<Id e>;` : ts += transition(unparse(source), event(unparse(e)), unparse(source));
-  	case (CEvent)`<Id e> / <Id a> -\> <Id target>;` : ts += transition(unparse(source), eventWithAction(unparse(e), unparse(a)), unparse(target));
-  	case (CEvent)`<Id e> / <Id a>;` : ts += transition(unparse(source), eventWithAction(unparse(e), unparse(a)), unparse(source));
+  	case (CEvent)`<Id e> -\> <Id target>;` : ts += transition(state(unparse(source)), event(unparse(e)), state(unparse(target)));
+  	case (CEvent)`<Id e>;` : ts += transition(state(unparse(source)), event(unparse(e)), state(unparse(source)));
+  	case (CEvent)`<Id e> / <Id a> -\> <Id target>;` : ts += transition(state(unparse(source)), eventWithAction(unparse(e), unparse(a)), state(unparse(target)));
+  	case (CEvent)`<Id e> / <Id a>;` : ts += transition(state(unparse(source)), eventWithAction(unparse(e), unparse(a)), state(unparse(source)));
   }
   return ts;
 }
