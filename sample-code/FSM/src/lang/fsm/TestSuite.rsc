@@ -1,21 +1,25 @@
 module lang::fsm::TestSuite
 
 import lang::fsm::AbstractSyntax;
-//import lang::fsm::Sample;
 import lang::fsm::Parser;
-import lang::fsm::Services;
+import lang::fsm::WFR;
 import Set;
 import List;
 
 StateMachine acme = parseFSM(|project://sle/samples/sample01.fsm|); 
 
-test bool testSingleInitialState() = 1 == initialStates(acme); 
-test bool testMultipleInitialState() = 1 != initialStates(acme); 
+test bool testSingleInitialState() = true == singleInitialState(acme); 
+test bool testMultipleInitialState() = false == singleInitialState(acme); 
 
-test bool testReachableState() = reachableState(acme);
-test bool testUnreachableState() = false == reachableState(acme);
+test bool testResolvableTargetState() = resolvableTargetState(acme);
+test bool testUnresolvableTargetState() = false == resolvableTargetState(acme);
 
 test bool testDistinctStates() = distinctStates(acme);
 test bool testDuplicatedStates() = false == distinctStates(acme);
 
-//list[Transition] testShowAmbiguos() = showAmbiguos(acme);
+test bool testReachableState() = reachableState(acme);
+test bool testUnreachableState() = false == reachableState(acme);
+
+test bool testDeterministicTransitions() = deterministicTransitions(acme);
+test bool testIndeterministicTransitions() = false == deterministicTransitions(acme);
+
