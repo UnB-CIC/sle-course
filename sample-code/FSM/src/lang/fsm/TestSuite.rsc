@@ -5,6 +5,7 @@ import lang::fsm::Sample;
 import lang::fsm::WFR;
 import Set;
 import List;
+import lang::fsm::Interpreter;
 
 test bool testSingleInitialState() = 0 == size(singleInitialState(acme)); 
 
@@ -16,3 +17,4 @@ test bool testReachableState() = reachableState(acme);
 
 test bool testDeterministicTransitions() = 0 == size(deterministicTransitions(acme));
 
+test bool testRun () = output == run(input,acme);
