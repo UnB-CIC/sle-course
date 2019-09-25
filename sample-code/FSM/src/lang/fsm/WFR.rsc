@@ -48,3 +48,9 @@ public void reachables(StateMachine sm, State s){
 	}
 }
 
+private str getErrorMessage(Error err) = "Multiple start states";
+
+list[str] runWFR(StateMachine sm) {
+	list[Error] errors = singleInitialState(sm);
+	return [getErrorMessage(err) | Error err <- errors ];
+}
