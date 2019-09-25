@@ -52,12 +52,17 @@ private str getErrorMessage(Error err) {
 	str errorMessage;
 	visit(err) {
 		case noUniqueStartState(_) : errorMessage = "Multiple start states";
+		case ambiguousTransitions(_) : errorMessage = "Ambigous transitions";
 	}
 	
 	return errorMessage;
 }
 
 list[str] runWFR(StateMachine sm) {
-	list[Error] errors = singleInitialState(sm);
-	return [getErrorMessage(err) | Error err <- errors ];
+	list[Error] errors = merge(
+		singleInitialState(sm),
+		deterministicTransitions(sm)
+	);
+	
+	return [getErrorMessage(err) | Error err <- errors];
 }

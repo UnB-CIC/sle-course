@@ -25,6 +25,7 @@ Transition transPassAlarm_l_e = transition(locked,passAlarm,exception);
 Transition transRelease_e_l = transition(exception,release,locked);
 Transition transTicketEject_e_e = transition(exception,ticketEject,exception);
 Transition transMute_e_e = transition(exception,mute,exception);
+Transition duplicated_transMute_e_e = transition(exception,mute,exception);
 Transition transPass_e_e = transition(exception,pass,exception);
 //ambiguos transition
 Transition transPass_e_u = transition(exception,pass,unlocked);
@@ -45,4 +46,9 @@ public StateMachine startAcme = fsm([locked, unlocked,initial, exception],
 public StateMachine noStartAcme = fsm([unlocked, exception],
 								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
 								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e]);								
- 
+
+public StateMachine duplicatedEventsAcme = fsm([locked, unlocked, exception],
+								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
+								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e, duplicated_transMute_e_e]);
+ 								
+  

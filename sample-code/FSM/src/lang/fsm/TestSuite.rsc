@@ -20,4 +20,4 @@ test bool testDeterministicTransitions() = 0 == size(deterministicTransitions(ac
 
 test bool testWFRNoUniqueStartStateError() = ["Multiple start states"] == runWFR(startAcme);
 
-// test bool testWFRNoUniqueStartStateError() = ["Ambigous transitions"] == runWFR(startAcme);
+test bool testWFRNoUniqueStartStateError() = ["Ambigous transitions"] == runWFR(duplicatedEventsAcme);
