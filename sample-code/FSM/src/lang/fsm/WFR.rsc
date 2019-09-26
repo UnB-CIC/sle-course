@@ -27,16 +27,16 @@ list[Error] reachableState(StateMachine sm) {
 }
 
 //--Help functions to Interpreter: --------------------------------------------
-public list[Transition] showTransitionState(State s, StateMachine sm) = ([t | /Transition t <- sm,(t.source==s)]);
+public list[Transition] showTransitionState(str s, StateMachine sm) = ([t | /Transition t <- sm,(t.source.name==s)]);
 
 public list[str] actionTransition(str ev,Transition t) = ([a | eventWithAction(e,a) <- t, (ev==e)]);
 public list[str] showOutput (str e, list[Transition] l) = isEmpty(l) ? [] :actionTransition(e, head(l))+showOutput(e,tail(l));
-public list[str] findAction(str e, State s, StateMachine sm) = showOutput(e, showTransitionState(s,sm));
+public list[str] findAction(str e, str s, StateMachine sm) = showOutput(e, showTransitionState(s,sm));
 
 
 public list[State] filterTarget(str ev,Transition t) = ([t.target | event(e) <- t, (ev==e)])+([t.target | eventWithAction(e,a) <- t, (ev==e)]);
 public list[State] filterTransition (str e, list[Transition] l) = isEmpty(l) ? [] :filterTarget(e, head(l))+filterTransition(e,tail(l));
-public list[State] nextState(str e, State s, StateMachine sm) = filterTransition(e, showTransitionState(s,sm));
+public list[State] nextState(str e, str s, StateMachine sm) = filterTransition(e, showTransitionState(s,sm));
 
 
 //---------------------------------------
