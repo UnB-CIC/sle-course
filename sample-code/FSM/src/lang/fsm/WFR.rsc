@@ -55,16 +55,24 @@ private str getErrorMessage(Error err) {
 	visit(err) {
 		case noUniqueStartState(_) : errorMessage = "Multiple start states";
 		case ambiguousTransitions(_) : errorMessage = "Ambigous transitions";
+		case unresolvableTargetState(_) : errorMessage = "Transition without a target";
+		case duplicatedStateIds(_) : errorMessage = "Duplicated State Ids";
+		case unreachableStates(_) : errorMessage = "Unreachable State";
 	}
 	
 	return errorMessage;
 }
 
 list[str] runWFR(StateMachine sm) {
-	list[Error] errors = merge(
+	list[Error] mergeLists(list[Error] list1, list[Error] list2) { return merge(list1, list2); } 
+
+	list[Error] errors = reducer([
 		singleInitialState(sm),
-		deterministicTransitions(sm)
-	);
+		deterministicTransitions(sm),
+		resolvableTargetState(sm),
+		distinctStateIds(sm),
+		reachableState(sm)
+	], mergeLists, []);
 	
 	return [getErrorMessage(err) | Error err <- errors];
 }

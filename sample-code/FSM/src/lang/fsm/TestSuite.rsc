@@ -7,8 +7,7 @@ import lang::fsm::Sample;
 import Set;
 import List;
 import String;
-
-StateMachine acme = parseFSM(|project://FSM/samples/sample01.fsm|); 
+import IO;
 
 test bool testSingleInitialState() = 0 == size(singleInitialState(acme)); 
 
@@ -22,4 +21,10 @@ test bool testDeterministicTransitions() = 0 == size(deterministicTransitions(ac
 
 test bool testWFRNoUniqueStartStateError() = ["Multiple start states"] == runWFR(startAcme);
 
-test bool testWFRNoUniqueStartStateError() = ["Ambigous transitions"] == runWFR(duplicatedEventsAcme);
+test bool testWFRNoDuplicatedEvents() = ["Ambigous transitions"] == runWFR(duplicatedEventsAcme);
+
+test bool testWFRNoTransitionWihtoutATarget() = ["Transition without a target"] == runWFR(trasitionWithoutATargetAcme);
+
+test bool testWFRDuplicatedStateIds() = ["Duplicated State Ids"] == runWFR(duplicatedStatesAcme);
+
+test bool testWFRStatesUnreachable() = ["Unreachable State"] == runWFR(unreachableStateAcme);
