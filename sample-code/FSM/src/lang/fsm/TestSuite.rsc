@@ -6,6 +6,7 @@ import lang::fsm::WFR;
 
 import Set;
 import List;
+import lang::fsm::Interpreter;
 
 StateMachine acme = parseFSM(|project://FSM/samples/sample01.fsm|); 
 
@@ -19,3 +20,4 @@ test bool testReachableState() =  0 == size(reachableState(acme));
 
 test bool testDeterministicTransitions() = 0 == size(deterministicTransitions(acme));
 
+test bool testRun () = output == run(input,acme);
