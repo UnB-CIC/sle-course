@@ -6,37 +6,38 @@ import Set;
 import lang::fsm::AbstractSyntax; 
 
 data Error = noUniqueStartState(list[State] initialStates)
-           | unresolvableTargetState()
+           | unresolvableTargetState(list[str] noStates)
            | ambiguousTransitions(list[Transition] transitions)
-           | unreachableStates();
+           | duplicatedStateIds(list[str] duplicated)
+           | unreachableStates(list[str] unreachable);
 
 
 list[Error] singleInitialState(StateMachine sm) = 1 == size(startStates(sm)) ? [] :  [noUniqueStartState(startStates(sm))];
 
-bool resolvableTargetState(StateMachine sm) = toSet([t.target | Transition t <- sm.transitions]) == toSet(sm.states);
+list[Error] resolvableTargetState(StateMachine sm) = (toSet([t.target.name | Transition t <- sm.transitions]) <= toSet([s.name | State s <- sm.states])) ? [] : [unresolvableTargetState(toList(toSet([t.target.name | Transition t <- sm.transitions]) - toSet([s.name | State s <- sm.states])))];
 
-bool distinctStates(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]);
+list[Error] distinctStateIds(StateMachine sm) =  size(toSet([s.name | State s <- sm.states])) == size([s.name | State s <- sm.states]) ? [] : [duplicatedStateIds([s.name | State s <- sm.states] - toList(toSet([s.name | State s <- sm.states])))];
 
 list[Error] deterministicTransitions(StateMachine sm) = isEmpty(showAmbiguos(showListTransitions(sm))) ? [] :[ambiguousTransitions(showAmbiguos(showListTransitions(sm)))];
 
-public set[State] visited = {};
-list[State] res = []; 
-
-bool reachableState(StateMachine sm) {
+list[Error] reachableState(StateMachine sm) {
 	list[State] initialState = startStates(sm);
 	reachables(sm, initialState[0]);
-	return toSet(res) == toSet(sm.states);
+	return toSet([s.name | State s <- res]) == toSet([s.name | State s <- sm.states]) ? [] : [unreachableStates([s.name | State s <- sm.states] - [s.name | State s <- res])];
 }
 
 //Help functions to identify WFR: -------------------------------------------------------------------------------------
 
 
-list[State] startStates(StateMachine sm) = [startState(n) | startState(n) <- sm.states];
+public list[State] startStates(StateMachine sm) = [startState(n) | startState(n) <- sm.states];
 
 public list[Transition] showAmbiguos (list[Transition] l) = isEmpty(l) ? [] :findAmbiguos(head(l),tail(l))+showAmbiguos(tail(l));
 list[Transition] findAmbiguos(Transition t,list[Transition] lt) = [X | Transition X <- lt,(X.source==t.source) && (X.event==t.event)];
 
 public list[Transition] showListTransitions(StateMachine sm) = ([t | /Transition t <- sm]);
+
+public set[State] visited = {};
+list[State] res = []; 
 
 public void reachables(StateMachine sm, State s){
 	if(!(s in visited)){
@@ -47,4 +48,5 @@ public void reachables(StateMachine sm, State s){
 		}	
 	}
 }
+
 
