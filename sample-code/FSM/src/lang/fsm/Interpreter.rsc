@@ -4,16 +4,12 @@ import lang::fsm::WFR;
 import lang::fsm::AbstractSyntax;
 import List;
 
-public list[str] run(list[str] l, StateMachine sm) {
+public list[str] run(list[str] stateList, StateMachine sm) {
 	list [str] outPut = [];
-	list [State] ls = startStates(sm);
-	State actualState = ls[0];
-	str event = head(l);
-	int n = 0;
-	while (n < size(l)){
-		outPut = outPut + findAction(l[n], actualState, sm);
-		actualState = nextState(l[n], actualState, sm)[0];
-		n = n+1;
+	State actualState = startStates(sm)[0];
+	for (int n <- [0..size(stateList)]){
+		outPut = outPut + findAction(stateList[n], actualState, sm);
+		actualState = nextState(stateList[n], actualState, sm)[0];	
 	}
 	return outPut;
 }
