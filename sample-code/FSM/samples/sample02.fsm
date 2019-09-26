@@ -9,7 +9,7 @@ initial state begin{
 }
 
 state unlocked {
-  ticket/eject;
+  ticket/alarm;
   pass -> locked;
 }
 
