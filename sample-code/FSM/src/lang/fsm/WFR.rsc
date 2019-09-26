@@ -28,12 +28,12 @@ bool reachableState(StateMachine sm) {
 	return toSet(res) == toSet(sm.states);
 }
 
-//---------------------------------------------
+//--Help functions to Interpreter: --------------------------------------------
 public list[Transition] showTransitionState(State s, StateMachine sm) = ([t | /Transition t <- sm,(t.source==s)]);
 
 public list[str] actionTransition(str ev,Transition t) = ([a | eventWithAction(e,a) <- t, (ev==e)]);
 public list[str] showOutput (str e, list[Transition] l) = isEmpty(l) ? [] :actionTransition(e, head(l))+showOutput(e,tail(l));
-public list[str] showAll(str e, State s, StateMachine sm) = showOutput(e, showTransitionState(s,sm));
+public list[str] findAction(str e, State s, StateMachine sm) = showOutput(e, showTransitionState(s,sm));
 
 
 public list[State] filterTarget(str ev,Transition t) = ([t.target | event(e) <- t, (ev==e)])+([t.target | eventWithAction(e,a) <- t, (ev==e)]);

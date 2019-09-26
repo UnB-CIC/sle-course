@@ -11,7 +11,7 @@ public list[str] run(list[str] l, StateMachine sm) {
 	str event = head(l);
 	int n = 0;
 	while (n < size(l)){
-		outPut = outPut + showAll(l[n], actualState, sm);
+		outPut = outPut + findAction(l[n], actualState, sm);
 		actualState = nextState(l[n], actualState, sm)[0];
 		n = n+1;
 	}
