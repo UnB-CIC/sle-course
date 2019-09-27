@@ -3,6 +3,10 @@ initial state locked {
   pass/alarm -> exception;
 }
 
+state notReachable {
+  ticket/collect -> unlocked;
+}
+
 state unlocked {
   ticket/eject;
   pass -> locked;
@@ -13,8 +17,4 @@ state exception {
   pass;
   mute;
   release -> locked;
-}
-
-state notReachable {
-  mute;
 }

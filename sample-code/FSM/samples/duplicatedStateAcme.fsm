@@ -8,12 +8,9 @@ state unlocked {
   pass -> locked;
 }
 
-
-state unlocked {
-  ticket/eject;
-  pass -> locked;
+state exception {
+  ticket/collect -> unlocked;
 }
-
 
 state exception {
   ticket/eject;
