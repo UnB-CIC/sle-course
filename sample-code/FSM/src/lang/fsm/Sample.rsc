@@ -47,13 +47,3 @@ public StateMachine startAcme = fsm([locked, unlocked,initial, exception],
 public StateMachine noStartAcme = fsm([unlocked, exception],
 								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
 								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e]);								
-
-public StateMachine duplicatedEventsAcme = fsm([locked, unlocked, exception],
-								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
-								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e, duplicated_transMute_e_e]);
- 			
- 			
-public StateMachine duplicatedStateAcme = fsm([locked, unlocked, exception, duplicatedException],
-								[transTicketCollet_l_u,transTicketEject_u_u,transPassAlarm_l_e,
-								transRelease_e_l,transPass_e_u,transTicketEject_e_e,transMute_e_e]);
- 					
