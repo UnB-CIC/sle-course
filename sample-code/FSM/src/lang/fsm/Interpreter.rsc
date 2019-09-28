@@ -1,6 +1,6 @@
 module lang::fsm::Interpreter
 
-import lang::fsm::WFR;
+import lang::fsm::Helper;
 import lang::fsm::AbstractSyntax;
 import List;
 import IO;
