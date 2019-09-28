@@ -1,4 +1,4 @@
-module lang::fsm::Visualization
+module lang::fsm::Visualizer;
 
 import lang::fsm::AbstractSyntax;
 import IO;
