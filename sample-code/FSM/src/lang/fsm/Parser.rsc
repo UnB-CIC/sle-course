@@ -6,24 +6,33 @@ import IO;
 import lang::fsm::ConcreteSyntax;
 import lang::fsm::AbstractSyntax; 
 
-public StateMachine parseFSM(loc file) {
- list[State] states = [];
- list[Transition] transitions = [];
+list[State] states = [];
+list[Transition] transitions = [];
  
+public StateMachine parseFSM(loc file) {	 
+ states = [];	
+ transitions = [];
+ 
+ map[State s, CEvent+ evts] acc = (); 
+ 	 
  start[FSM] parseResult = parse(#start[FSM], file);
  
  top-down visit (parseResult) {
     case (CState)`initial state <Id id> { <CEvent* evts>}`: {
       State s = startState(unparse(id));
       states += s;
-      transitions += parseEvents(s, evts);
+      acc[s] = evts; 
     }
     case (CState)`state <Id id> { <CEvent* evts>}`: {
       State s = state(unparse(id));
       states += s;
-      transitions += parseEvents(s, evts);	
-    }
+      acc[s] = evts; 	
+    } 
  };
+  
+ for(State s <- acc) {
+   transitions += parseEvents(s, acc[s]);
+ }
  
  return fsm(states, transitions);
 }
@@ -31,10 +40,22 @@ public StateMachine parseFSM(loc file) {
 list[Transition] parseEvents(State source, CEvent* evts) {
   list[Transition] ts = [];
   top-down visit(evts) {
-  	case (CEvent)`<Id e> -\> <Id target>;` : ts += transition(source, event(unparse(e)), state(unparse(target)));
+  	case (CEvent)`<Id e> -\> <Id target>;` : ts += transition(source, event(unparse(e)), findState(unparse(target)));
   	case (CEvent)`<Id e>;` : ts += transition(source, event(unparse(e)), source);
-  	case (CEvent)`<Id e> / <Id a> -\> <Id target>;` : ts += transition(source, eventWithAction(unparse(e), unparse(a)), state(unparse(target)));
+  	case (CEvent)`<Id e> / <Id a> -\> <Id target>;` : ts += transition(source, eventWithAction(unparse(e), unparse(a)), findState(unparse(target)));
   	case (CEvent)`<Id e> / <Id a>;` : ts += transition(source, eventWithAction(unparse(e), unparse(a)), source);
   }
   return ts;
+}
+
+State findState(str id) {
+   println(states);
+   for(State s <- states) {		
+        println(s);
+		switch(s) {
+			case state(n)  : if(n == id) return state(id);  
+			case startState(n) : if(n == id) return startState(id);   
+		}	
+	}
+	throw "could not find a state with name: <id>";
 }
