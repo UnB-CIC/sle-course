@@ -13,7 +13,7 @@ public StateMachine parseFSM(loc file) {
  states = [];	
  transitions = [];
  
- map[State s, CEvent+ evts] acc = (); 
+ map[State s, CEvent* evts] acc = (); 
  	 
  start[FSM] parseResult = parse(#start[FSM], file);
  
@@ -49,13 +49,11 @@ list[Transition] parseEvents(State source, CEvent* evts) {
 }
 
 State findState(str id) {
-   println(states);
    for(State s <- states) {		
-        println(s);
-		switch(s) {
-			case state(n)  : if(n == id) return state(id);  
-			case startState(n) : if(n == id) return startState(id);   
+        switch(s) {
+			case state(id)  : return state(id);  
+			case startState(id) : return startState(id);   
 		}	
 	}
-	throw "could not find a state with name: <id>";
+	return state(id);
 }

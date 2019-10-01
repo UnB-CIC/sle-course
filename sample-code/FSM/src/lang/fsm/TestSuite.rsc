@@ -27,7 +27,7 @@ test bool testReachableState() =  0 == size(reachableState(acme));
 test bool testDeterministicTransitions() = 0 == size(deterministicTransitions(acme));
 
 
-test bool testRun() = output == run(input,acme);
+test bool testRun() = output == run(acme, input);
 
 StateMachine duplicatedStartAcme = parseFSM(|project://FSM/samples/duplicatedStartAcme.fsm|); 
 test bool testWFRNoUniqueStartStateError() = ["Multiple start states", "Unreachable State"] == runWFR(duplicatedStartAcme);
