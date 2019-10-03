@@ -5,13 +5,27 @@ import lang::fsm::AbstractSyntax;
 import List;
 import IO;
 
-public list[str] run(list[str] eventList, StateMachine sm) {
-	list [str] outPut = [];
-	str actualState = startStates(sm)[0].name;
-	for (int n <- [0..size(eventList)]){
-		outPut = outPut + findAction(eventList[n], actualState, sm);
-		actualState = nextState(eventList[n], actualState, sm)[0].name;
+public list[str] run(StateMachine sm, list[str] eventList) =
+  [s | s<- executeAll(sm, startStates(sm)[0], eventList), s != ""];
+
+
+list[str] executeAll(StateMachine sm, State source, list[str] evts) {
+	switch(evts) {
+		case [] : return []; 
+		case [e,es*] : {
+			tuple[State next, str action] res = execute(sm, source, e);
+			return (res.action + executeAll(sm, res.next, es)); 
+		}
 	}
-	return outPut;
 }
+
+tuple[State, str] execute(StateMachine sm, State source, str evt) {
+	for(Transition t <- sm.transitions) {
+		switch(t) {
+			case transition(source, event(evt), target): return <target, "">; 
+			case transition(source, eventWithAction(evt, act), target): return <target, act>; 
+		}
+	}
+	throw "coult not find a valid event"; 
+} 
 
