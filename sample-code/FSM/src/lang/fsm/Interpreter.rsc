@@ -5,9 +5,8 @@ import lang::fsm::AbstractSyntax;
 import List;
 import IO;
 
-public list[str] run(StateMachine sm, list[str] eventList) {
-	return [s | s<- executeAll(sm, startStates(sm)[0], eventList), s != ""];
-}
+public list[str] run(StateMachine sm, list[str] eventList) =
+  [s | s<- executeAll(sm, startStates(sm)[0], eventList), s != ""];
 
 
 list[str] executeAll(StateMachine sm, State source, list[str] evts) {

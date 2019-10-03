@@ -1,10 +1,9 @@
-module lang::oberon::Stack
+module lang::oberon::util::Stack
 
-data Stack = empty()
-           | push(int v, Stack s);
-           
-data Maybe = nothing()
-		   | just(int v);
+import lang::oberon::util::Maybe; 
+
+data Stack[&T] = empty()
+               | push(&T v, Stack[&T] s);
            
 int size(empty()) = 0;
 int size(push(v,r)) = 1 + size(r); 
