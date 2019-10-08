@@ -1,4 +1,4 @@
-module lang::oberon::util::Maybe
+module lang::util::Maybe
 
 data Maybe[&T] = nothing()
 		       | just(&T v);

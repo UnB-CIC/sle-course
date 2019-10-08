@@ -1,6 +1,6 @@
-module lang::oberon::util::Stack
+module lang::util::Stack
 
-import lang::oberon::util::Maybe; 
+import lang::util::Maybe; 
 
 data Stack[&T] = empty()
                | push(&T v, Stack[&T] s);

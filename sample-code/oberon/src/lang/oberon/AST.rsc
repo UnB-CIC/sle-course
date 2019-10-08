@@ -12,11 +12,13 @@ data Type = TInt()
 data Variable = variable(Name name, Type varType); 
 
 data Expression = VarRef(Name name) 
-                | IntValue(int val)
-                | BoolValue(bool val)
+                | IntValue(int ival)
+                | BoolValue(bool bval)
                 | And(Expression lhs,Expression rhs)
                 | Add(Expression lhs, Expression rhs)
                 | Not(Expression exp)
+                | Gt(Expression lhs,Expression rhs)
+				| Lt(Expression lhs,Expression rhs)        
                 ;
                 
 data Statement = Assignment(Name var, Expression exp)
@@ -26,6 +28,7 @@ data Statement = Assignment(Name var, Expression exp)
                | WhileStmt(Expression condition, Statement stmt)
                | BlockStmt(list[Statement] stmts)
                | Invoke(Name name, Args pmts)
+               | Print(Expression exp)
                ;
 
 data Parameter = Parameter(Name pmtName, Type pmtType);
