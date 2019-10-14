@@ -57,6 +57,17 @@ syntax MulOperator
 
 lexical ID = [a-zA-Z][a-zA-Z_0-9]*;
 
+// Factors
+lexical INT = [0-9]+ ;
+lexical REAL = [0-9]+[.][0-9]+ ;
+lexical STRING = [\"]*[\"];
+syntax NOT_FACTOR = NOT Factor;
+syntax NIL = "NIL";
+syntax Boolean
+ 	= "TRUE"
+  	| "FALSE"
+  	;
+
 syntax Factor
 	= int_factor: INT
 	| real_factor: REAL
@@ -70,19 +81,8 @@ syntax Factor
 	| NOT_FACTOR
 	;
 
-// Factors
-lexical INT = [0-9]+ ;
-lexical REAL = [0-9]+[.][0-9]+ ;
-lexical STRING = [\"]*[\"];
-syntax NOT_FACTOR = NOT Factor;
-syntax NIL = "NIL";
-syntax Boolean
- 	= "TRUE"
-  	| "FALSE"
-  	;
-
 syntax Designator = Qualident DesignatorArgs;
-syntax DesignatorArgs = "[" Explist "]" | UPCHAR;
+syntax DesignatorArgs = "[" Explist "]" | UPCHAR; // Existe construção isArray ?
 
 lexical Qualident = (ID '.')* ID;
 
@@ -99,6 +99,16 @@ syntax CaseLabelList = CaseLabels (COMMA CaseLabels)* ;
 syntax CaseLabels = Expression (RANGESEP Expression)?;
 
 syntax Set = '{' CaseLabelList? '}' ;
+
+// syntax DeclarationSequence = ("CONST" (constantdeclaration SEMI)* | K_VAR (variabledeclaration SEMI)*)+;
+
+syntax ConstantDeclaration = IdentDef EQUAL Expression;
+
+syntax IdentDef = ID;
+syntax IdentList = IdentDef (COMMA IdentDef)*;
+
+syntax Type = BaseTypes; // | isArr=arraytype;
+syntax BaseTypes = "INTEGER" | "REAL" | "BOOLEAN";
 
 keyword Keywords
 	= "ARRAY"
