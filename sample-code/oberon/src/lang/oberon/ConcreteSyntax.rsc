@@ -100,8 +100,10 @@ syntax CaseLabels = Expression (RANGESEP Expression)?;
 
 syntax Set = '{' CaseLabelList? '}' ;
 
-// syntax DeclarationSequence = ("CONST" (constantdeclaration SEMI)* | K_VAR (variabledeclaration SEMI)*)+;
+syntax DeclarationSequence = DeclarationOptions+;
+syntax DeclarationOptions = "CONST" (ConstantDeclaration SEMI)* | "VAR" (VariableDeclaration SEMI)*;
 
+syntax VariableDeclaration = IdentList COLON Type;
 syntax ConstantDeclaration = IdentDef EQUAL Expression;
 
 syntax IdentDef = ID;
