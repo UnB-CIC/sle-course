@@ -5,6 +5,9 @@ module lang::oberon::ConcreteSyntax
 	Reference: https://inf.ethz.ch/personal/wirth/Oberon/Oberon07.Report.pdf
 */
 
+// TODO: WS : ( ' ' | '\t' | '\r' | '\n') -> skip;
+// TODO: COMMENT : '(*' .*? '*)' -> skip;
+
 lexical PERIOD = "." ;
 lexical RANGESEP = "..";
 lexical SEMI = ";";
@@ -14,7 +17,7 @@ lexical COMMA = ",";
 lexical NOT = "~";
 
 lexical UNEQUAL = "#";
-lexical LESS = "\<"; // Escape
+lexical LESS = "\<"; // Escape tá certo?
 lexical GREATER = "\>";  // Escape
 lexical LESSOREQ = "\<=";  // Escape
 lexical GREATEROREQ = "\>=";  // Escape
@@ -57,7 +60,6 @@ syntax MulOperator
 
 lexical ID = [a-zA-Z][a-zA-Z_0-9]*;
 
-// Factors
 lexical INT = [0-9]+ ;
 lexical REAL = [0-9]+[.][0-9]+ ;
 lexical STRING = [\"]*[\"];
@@ -82,7 +84,7 @@ syntax Factor
 	;
 
 syntax Designator = Qualident DesignatorArgs;
-syntax DesignatorArgs = "[" Explist "]" | UPCHAR; // Existe construção isArray ?
+syntax DesignatorArgs = "[" Explist "]" | UPCHAR; // TODO: Existe construção isArray ?
 
 lexical Qualident = (ID '.')* ID;
 
@@ -109,8 +111,57 @@ syntax ConstantDeclaration = IdentDef EQUAL Expression;
 syntax IdentDef = ID;
 syntax IdentList = IdentDef (COMMA IdentDef)*;
 
-syntax Type = BaseTypes; // | isArr=arraytype;
+syntax Type = BaseTypes; // TODO: | isArr=arraytype;
 syntax BaseTypes = "INTEGER" | "REAL" | "BOOLEAN";
+
+syntax ArrayType = "ARRAY" ExplList "OF" Type;
+syntax RecordType = "RECORD" ('(' Qualident ')')? FieldListSequence "END" ;
+syntax PointerType = "POINTER" "TO" Type ;
+syntax ProcedureType = "PROCEDURE" FormalParameters? ;
+
+syntax FieldList = (IdentList COLON Type)?;
+syntax FieldListSequence = FieldList (SEMI FieldList);
+
+syntax FpSection = "VAR"? IdList COLON Type ;
+syntax Params = FpSection (SEMI FpSection)*;
+syntax FormalParameters = "(" Params? ")" (COLON Type)? ;
+
+syntax ProcedureDeclaration = ProcedureHeading SEMI ProcedureBody ID;
+syntax ProcedureHeading = "PROCEDURE" IdentDef "*"? FormalParameters?;
+syntax ProcedureBody = DeclarationSequence? ("BEGIN" StatementSequence)? "END";
+
+syntax WhileStatement = "WHILE" Expression "DO" StatementSequence "END";
+syntax RepeatStatement = "REPEAT" StatementSequence "UNTIL" Expression;
+syntax LoopStatement = "LOOP" StatementSequence "END";
+
+syntax IfStatement = "IF" Expression "THEN" StatementSequence ("ELSIF" Expression "THEN" StatementSequence)* ("ELSE" StatementSequence)? "END";
+syntax CaseStatement = "CASE" Expression "OF" CaseItem ("|" CaseItem)* ("ELSE" StatementSequence)? "END";
+syntax CaseItem = CaseLabelList COLON StatementSequence;
+syntax CaseLabelList = CaseLabels (COMMA CaseLabels)*;
+syntax CaseLabels = Expression (RANGESEP Expression)?;
+
+syntax Module = "MODULE" ID SEMI DeclarationSequence? ModuleDeclarations* ("BEGIN" StatementSequence)? "END" ID PERIOD ;
+syntax ModuleDeclarations = ProcedureDeclaration SEMI | ForwardFeclaration SEMI;
+syntax ImportList = "IMPORT" ImportItem (COMMA ImportItem)* SEMI;
+syntax ImportItem = ID (ASSIGN ID)?;
+
+syntax ForwardDeclaration = "PROCEDURE" UPCHAR? ID MULT? FormalParameters?;
+
+syntax StatementSequence = Statement SEMI (Statement SEMI)* ;
+
+syntax Statement = Assignment
+        | ProcedureCall
+        | IfStatement
+        | CaseStatement
+        | WhileStatement
+        | RepeatStatement
+        | LoopStatement
+        | WithStatement 
+        | "EXIT"
+        | "RETURN" Expression?
+        ;
+
+syntax WithStatement = "WITH" Qualident COLON Qualident "DO" StatementSequence "END";
 
 keyword Keywords
 	= "ARRAY"
