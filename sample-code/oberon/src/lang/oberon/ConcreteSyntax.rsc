@@ -63,7 +63,7 @@ syntax Factor
 	| boolean_factor: Boolean
 	| string_factor: STRING
 	| nil_type: NIL
-	// | set_factor:
+	| set_factor: SET
 	| designator_factor: Designator
 	| simpleExpression_factor: "(" SimpleExpression ")"
 	| procedurecall_factor: ProcedureCall
@@ -94,6 +94,11 @@ syntax Term = Factor (MulOperator Factor)*;
 
 syntax ProcedureCall = ID ActualParameters;
 syntax ActualParameters = "(" Explist? ")";
+
+syntax CaseLabelList = CaseLabels (COMMA CaseLabels)* ;
+syntax CaseLabels = Expression (RANGESEP Expression)?;
+
+syntax Set = '{' CaseLabelList? '}' ;
 
 keyword Keywords
 	= "ARRAY"
