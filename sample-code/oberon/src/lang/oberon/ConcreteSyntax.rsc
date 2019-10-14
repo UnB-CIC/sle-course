@@ -65,8 +65,8 @@ syntax Factor
 	| nil_type: NIL
 	// | set_factor:
 	| designator_factor: Designator
-	// | simpleExpression_factor
-	// | procedurecall_factor
+	| simpleExpression_factor: "(" SimpleExpression ")"
+	| procedurecall_factor: ProcedureCall
 	| NOT_FACTOR
 	;
 
@@ -91,6 +91,9 @@ syntax Explist = Expression (COMMA Expression)*;
 syntax Expression = SimpleExpression (Relation SimpleExpression)?;
 syntax SimpleExpression = MINUS? Term (AddOperator Term)*;
 syntax Term = Factor (MulOperator Factor)*;
+
+syntax ProcedureCall = ID ActualParameters;
+syntax ActualParameters = "(" Explist? ")";
 
 keyword Keywords
 	= "ARRAY"
