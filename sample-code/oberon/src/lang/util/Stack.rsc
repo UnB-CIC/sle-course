@@ -11,8 +11,8 @@ int size(push(v,r)) = 1 + size(r);
 Maybe peek(empty()) = nothing();
 Maybe peek(push(v, r)) = just(v);
 
-tuple[Maybe, Stack] pop(empty()) = <nothing(), empty()>;
-tuple[Maybe, Stack] pop(push(v, r)) = <just(v), r>;
+tuple[Maybe v, Stack stack] pop(empty()) = <nothing(), empty()>;
+tuple[Maybe v, Stack stack] pop(push(v, r)) = <just(v), r>;
 
 Maybe peek(empty()) = nothing();
 Maybe peek(push(v,r)) = just(v);
