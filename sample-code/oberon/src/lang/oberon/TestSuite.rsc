@@ -21,7 +21,7 @@ FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt);
 
 public OberonProgram prg = program([var], [f], mainBlock);
 
-Context finalMap = context([], ("x": IntValue(10)), empty());
+Context finalMap = context([f], ("x": IntValue(10)), empty());
 
 test bool testProgram() = finalMap == execute(prg);
 

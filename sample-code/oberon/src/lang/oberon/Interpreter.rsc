@@ -52,9 +52,12 @@ public Context execute(Assignment(n, e), ctx) {
 	return ctx; 
 }
 
-public Context execute(Return(e),Context ctx){
-     top(ctx.heap)["return"] = eval(e,ctx);
-     return ctx;
+public Context execute(Return(e), Context ctx){
+	mem = top(ctx.heap);
+	mem["return"] = eval(e, ctx);
+    pop(ctx.heap);
+    ctx.heap = push(mem, ctx.heap);
+    return ctx;
 }  
 
 public Context execute(WhileStmt(c, block), Context ctx1) {
@@ -123,12 +126,12 @@ public Expression eval(Invoke(n, pmts), Context ctx){
 	FDecl f = lookup(n, ctx.fns);
 	ctx.heap = push((a.pmtName:eval(b, ctx) | <a,b> <- zip(f.args, pmts)), ctx.heap);
 	try { 
-	   println(f.block);
 	  ctx = execute(f.block, ctx);
-	  //exp = top(ctx.heap)["return"];
-	  //ctx.heap = pop(ctx.heap).stack;
-	  return IntValue(0);
+	  exp = top(ctx.heap)["return"];
+	  <v, s> = pop(ctx.heap);
+	  ctx.heap = s;  	
+	  return exp;
 	} 
-	catch: println("error"); return IntValue(10);
+	catch e: println(e); return IntValue(10);
 }
 
