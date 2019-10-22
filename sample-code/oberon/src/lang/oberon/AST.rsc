@@ -8,17 +8,22 @@ data OberonProgram = program(list[Variable] vars, list[FDecl] fns, Statement blo
 
 data Type = TInt()
           | TBool()     
+          | TUndef()
 		  ;
-data Variable = variable(Name name, Type varType); 
+
+data Variable = variable(Name name, Type varType)
+              | variableInit(Name name, Type varType, Expression exp);  
 
 data Expression = VarRef(Name name) 
                 | IntValue(int ival)
                 | BoolValue(bool bval)
+                | Undefined()
                 | Add(Expression lhs, Expression rhs)
                 | And(Expression lhs,Expression rhs)
                 | Not(Expression exp)
                 | Gt(Expression lhs,Expression rhs)
-				| Lt(Expression lhs,Expression rhs)        
+				| Lt(Expression lhs,Expression rhs)
+				| Invoke(Name name, Args pmts)
                 ;
                 
 data Statement = Assignment(Name var, Expression exp)
@@ -27,8 +32,8 @@ data Statement = Assignment(Name var, Expression exp)
                | IfElseStmt(Expression condition, Statement stmtThen, Statement stmtElse)
                | WhileStmt(Expression condition, Statement stmt)
                | BlockStmt(list[Statement] stmts)
-               | Invoke(Name name, Args pmts)
                | Print(Expression exp)
+               | Return(Expression exp)
                ;
 
 data Parameter = Parameter(Name pmtName, Type pmtType);
