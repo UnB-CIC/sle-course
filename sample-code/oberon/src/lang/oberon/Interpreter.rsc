@@ -51,7 +51,7 @@ public Context execute(BlockStmt([]), Context ctx) = ctx;
 
 public Context execute(BlockStmt([c,*cs]), Context ctx1) { 
   switch(c) {
-    case Return(e) : return execute(c, ctx1); 
+    case Return(e) : return execute(f); 
     default: { 
        Context ctx2 = execute(c, ctx1); 
        return execute(BlockStmt(cs), ctx2); 
@@ -86,6 +86,14 @@ public Expression eval(Lt(lhs, rhs), Context ctx) {
   }
 }
 
+public Expression eval(Gt(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return BoolValue(n > m); 
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n > m);
+    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+  }
+}
+
 public Expression eval(VarRef(n), Context ctx) {
   if(n in top(ctx.heap)) {
   	return top(ctx.heap)[n];
@@ -108,7 +116,7 @@ public Expression eval(Invoke(n, pmts), Context ctx){
   ctx = notifyInvoke((a.pmtName : eval(b, ctx) | <a,b> <- zip(f.args, pmts)), ctx);
   ctx = execute(f.block, ctx);
   exp = top(ctx.heap)["return"];
-  ctx = invokeReturn(ctx);
+  ctx = notifyReturn(ctx);
   return exp;
 }
 

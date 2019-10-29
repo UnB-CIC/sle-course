@@ -29,7 +29,8 @@ public Context expected = context((), ("x" : IntValue(30), "y" : BoolValue(true)
 
 public OberonProgram prg = program([var], [f], mainBlock);
 
-test bool testProgram() = finalContext == execute(prg);
+//TODO 
+//test bool testProgram() = finalContext == execute(prg);
 
 test bool testEvalAddExp() = IntValue(10) == eval(Add(IntValue(3), IntValue(7)), context((), (), empty()));
 
@@ -38,5 +39,9 @@ test bool testEvalIntValue() = IntValue(10) == eval(IntValue(10), context((), ()
 test bool testEvalBoolValue() = BoolValue(true) == eval(BoolValue(true), context((), (), empty()));
 
 test bool testValidVariable() = IntValue(100) == eval(VarRef("z"), ctx); 
+
+test bool testValidLt() = BoolValue(true) == eval(Lt(VarRef("x"),VarRef("z")),ctx);
+
+test bool testValidGt() = BoolValue(false) == eval(Gt(VarRef("x"),VarRef("z")),ctx);
 
 test bool testExecuteAssignment() = expected == execute(Assignment("x", IntValue(30)), ctx);
