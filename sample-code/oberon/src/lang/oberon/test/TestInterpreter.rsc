@@ -5,6 +5,7 @@ import lang::oberon::Interpreter;
 import lang::util::Stack;
 import lang::oberon::ExecutionContext;
 
+import IO;
 
 Variable var = variable("x",TInt());
 Statement attrib1 = Assignment("x", IntValue(0));
@@ -30,9 +31,11 @@ public Context expected = context((), ("x" : IntValue(30), "y" : BoolValue(true)
 public OberonProgram prg = program([var], [f], mainBlock);
 
 //TODO 
-//test bool testProgram() = finalContext == execute(prg);
+test bool testProgram() = finalContext == execute(prg);
 
 test bool testEvalAddExp() = IntValue(10) == eval(Add(IntValue(3), IntValue(7)), context((), (), empty()));
+
+//test bool testEvalAndExp() = BoolValue(true) == eval(And(BoolValue(true),VarRef("y")), ctx);
 
 test bool testEvalIntValue() = IntValue(10) == eval(IntValue(10), context((), (), empty()));
 

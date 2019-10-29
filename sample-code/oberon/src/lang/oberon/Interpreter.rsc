@@ -104,15 +104,15 @@ public Expression eval(VarRef(n), Context ctx) {
   throw nonDeclaredVariable(); 
 }
 
-public FDecl lookup(Name n, list[FDecl] decls){
-  if(n in ctx.fnDecls) {
-     return ctx.fnDecls[n];
+public FDecl lookup(Name n, map[str,FDecl] decls){
+  if(n in decls) {
+     return decls[n];
   }
   throw "Function <n> has not been declared"; 
 }
 
 public Expression eval(Invoke(n, pmts), Context ctx){
-  FDecl f = lookup(n, ctx.fns);
+  FDecl f = lookup(n, ctx.fnDecls);
   ctx = notifyInvoke((a.pmtName : eval(b, ctx) | <a,b> <- zip(f.args, pmts)), ctx);
   ctx = execute(f.block, ctx);
   exp = top(ctx.heap)["return"];
