@@ -18,6 +18,9 @@ Statement mainBlock = BlockStmt([attrib1, whileStmt]);
 
 // inc(x : int) { return x + 1; }
 Expression returnExp = Add(VarRef("z"), IntValue(1));
+Expression returnExp2 = Add(VarRef("z"), VarRef("y"));
 Statement retStmt = Return(returnExp);
+Statement retStmt2 = Return(returnExp2);
 FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt);
-public OberonProgram prg = program([var,varB], [f], mainBlock);
+FDecl f2 = FDecl("inc2", [Parameter("z", TInt()),Parameter("y", TInt())], retStmt2);
+public OberonProgram prg = program([var,varB], [f,f2], mainBlock);

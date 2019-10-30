@@ -26,7 +26,23 @@ public str translateVar(OberonProgram p){
 }
 public str translateFunc(p){
 	str tFunc = "";
-	println("translate here the functions!");
+	for(FDecl fp <- p.fns) {
+	  	top-down visit (fp) {
+	  		case FDecl(nF,_,_): tFunc = tFunc+nF+"(";
+	  	}
+	  	for (Parameter pF <-fp.args){
+	  		if((indexOf(fp.args,pF))>0)
+	  			tFunc = tFunc+",";
+	  		top-down visit (pF) {
+	  			case Parameter(nP,TInt()): tFunc = tFunc+"int "+nP;
+	  			case Parameter(nP,TBool()): tFunc = tFunc+"bool "+nP;
+	  		}
+	  	}
+	  	tFunc = tFunc+")"+"\n"+"{";
+	  	//the block is here
+	  	tFunc = tFunc+"\n"+"}"+"\n";
+	}
+	println("translate here the block of functions!");
 	return tFunc;
 }
 public str translateMainBlock(p){
