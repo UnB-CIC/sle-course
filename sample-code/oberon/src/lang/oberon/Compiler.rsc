@@ -5,9 +5,9 @@ import IO;
 import List;
 
 public void compile(OberonProgram p) {
-	str allProgram = "int main()"+"\n"+"{"+"\n";
+	str allProgram = translateVar(p);
 	
-	allProgram = allProgram+translateVar(p);
+	allProgram = allProgram+"int main()"+"\n"+"{"+"\n";
 	allProgram = allProgram+translateFunc(p);
 	allProgram = allProgram+translateMainBlock(p);
 	
