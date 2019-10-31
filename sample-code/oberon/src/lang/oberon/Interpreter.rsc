@@ -78,6 +78,13 @@ public Expression eval(Add(lhs, rhs), Context ctx) {
   }
 }
 
+public Expression eval(And(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n && m); 
+    default :  throw "Invalid Expression <And(lhs, rhs)>"; 
+  }
+}
+
 public Expression eval(Lt(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n < m); 

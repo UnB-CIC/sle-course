@@ -35,7 +35,7 @@ test bool testProgram() = finalContext == execute(prg);
 
 test bool testEvalAddExp() = IntValue(10) == eval(Add(IntValue(3), IntValue(7)), context((), (), empty()));
 
-//test bool testEvalAndExp() = BoolValue(true) == eval(And(BoolValue(true),VarRef("y")), ctx);
+test bool testEvalAndExp() = BoolValue(false) == eval(And(BoolValue(false),VarRef("y")), ctx);
 
 test bool testEvalIntValue() = IntValue(10) == eval(IntValue(10), context((), (), empty()));
 
