@@ -85,6 +85,13 @@ public Expression eval(And(lhs, rhs), Context ctx) {
   }
 }
 
+public Expression eval(Not(exp), Context ctx) {
+  switch(<eval(exp, ctx)>) {
+    case <BoolValue(n)> : return BoolValue(!n); 
+    default :  throw "Invalid Expression <Not(exp)>"; 
+  }
+}
+
 public Expression eval(Lt(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n < m); 
@@ -100,6 +107,7 @@ public Expression eval(Gt(lhs, rhs), Context ctx) {
     default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
   }
 }
+
 
 public Expression eval(VarRef(n), Context ctx) {
   if(n in top(ctx.heap)) {

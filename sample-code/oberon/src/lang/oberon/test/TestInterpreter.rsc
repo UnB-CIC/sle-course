@@ -37,6 +37,8 @@ test bool testEvalAddExp() = IntValue(10) == eval(Add(IntValue(3), IntValue(7)),
 
 test bool testEvalAndExp() = BoolValue(false) == eval(And(BoolValue(false),VarRef("y")), ctx);
 
+test bool testEvalNotExp() = BoolValue(false) == eval(Not(VarRef("y")), ctx);
+
 test bool testEvalIntValue() = IntValue(10) == eval(IntValue(10), context((), (), empty()));
 
 test bool testEvalBoolValue() = BoolValue(true) == eval(BoolValue(true), context((), (), empty()));
