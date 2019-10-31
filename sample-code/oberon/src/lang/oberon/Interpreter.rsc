@@ -47,6 +47,23 @@ public Context execute(WhileStmt(c, block), Context ctx1) {
 	return ctx1; 
 }
 
+public Context execute(IfStmt(c, block), Context ctx) {
+	if(eval(c, ctx) == BoolValue(true)) {
+		ctx = execute(block, ctx); 
+	}
+	return ctx; 
+}
+
+public Context execute(IfElseStmt(c, stmtIf,stmtElse), Context ctx) {
+	if(eval(c, ctx) == BoolValue(true)) {
+		ctx = execute(stmtIf, ctx); 
+	}
+	else{
+		ctx = execute(stmtElse, ctx); 
+	}
+	return ctx; 
+}
+
 public Context execute(BlockStmt([]), Context ctx) = ctx; 
 
 public Context execute(BlockStmt([c,*cs]), Context ctx1) { 
@@ -107,7 +124,6 @@ public Expression eval(Gt(lhs, rhs), Context ctx) {
     default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
   }
 }
-
 
 public Expression eval(VarRef(n), Context ctx) {
   if(n in top(ctx.heap)) {

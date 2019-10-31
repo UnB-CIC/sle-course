@@ -50,3 +50,9 @@ test bool testValidLt() = BoolValue(true) == eval(Lt(VarRef("x"),VarRef("z")),ct
 test bool testValidGt() = BoolValue(false) == eval(Gt(VarRef("x"),VarRef("z")),ctx);
 
 test bool testExecuteAssignment() = expected == execute(Assignment("x", IntValue(30)), ctx);
+
+test bool testExecuteIfStmt() = expected == execute(IfStmt(BoolValue(true),Assignment("x", IntValue(30))), ctx);
+
+test bool testExecuteIfElseStmt() = expected == execute(IfElseStmt(BoolValue(true),Assignment("x", IntValue(30)), Print(VarRef("x"))), ctx);
+
+//test bool testExecuteIfStmt() = expected == execute(IfStmt(Lt(VarRef("x"),IntValue(30)),Assignment("x", Add(VarRef("x"), IntValue(20)))), ctx);
