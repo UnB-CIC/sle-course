@@ -9,6 +9,7 @@ data OberonProgram = program(list[Variable] vars, list[FDecl] fns, Statement blo
 data Type = TInt()
           | TBool()     
           | TUndef()
+          | TError()
 		  ;
 
 data Variable = variable(Name name, Type varType)
@@ -19,10 +20,17 @@ data Expression = VarRef(Name name)
                 | BoolValue(bool bval)
                 | Undefined()
                 | Add(Expression lhs, Expression rhs)
+                | Sub(Expression lhs, Expression rhs)
+                | Mult(Expression lhs, Expression rhs)
+                | Div(Expression lhs, Expression rhs)
                 | And(Expression lhs,Expression rhs)
+                | Or(Expression lhs, Expression rhs)
                 | Not(Expression exp)
                 | Gt(Expression lhs,Expression rhs)
-				| Lt(Expression lhs,Expression rhs)
+                | Lt(Expression lhs,Expression rhs)
+                | GoEq(Expression lhs,Expression rhs)
+				| LoEq(Expression lhs,Expression rhs)
+				| Eq(Expression lhs,Expression rhs)
 				| Invoke(Name name, Args pmts)
                 ;
                 
