@@ -95,9 +95,37 @@ public Expression eval(Add(lhs, rhs), Context ctx) {
   }
 }
 
+public Expression eval(Sub(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return IntValue(n - m); 
+    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+  }
+}
+
+public Expression eval(Mult(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return IntValue(n * m); 
+    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+  }
+}
+
+public Expression eval(Div(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return IntValue(n / m); 
+    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+  }
+}
+
 public Expression eval(And(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <BoolValue(n), BoolValue(m)> : return BoolValue(n && m); 
+    default :  throw "Invalid Expression <And(lhs, rhs)>"; 
+  }
+}
+
+public Expression eval(Or(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n || m); 
     default :  throw "Invalid Expression <And(lhs, rhs)>"; 
   }
 }
@@ -109,6 +137,14 @@ public Expression eval(Not(exp), Context ctx) {
   }
 }
 
+public Expression eval(Gt(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return BoolValue(n > m); 
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n > m);
+    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+  }
+}
+
 public Expression eval(Lt(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n < m); 
@@ -117,10 +153,18 @@ public Expression eval(Lt(lhs, rhs), Context ctx) {
   }
 }
 
-public Expression eval(Gt(lhs, rhs), Context ctx) {
+public Expression eval(GoEq(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
-    case <IntValue(n), IntValue(m)> : return BoolValue(n > m); 
-    case <BoolValue(n), BoolValue(m)> : return BoolValue(n > m);
+    case <IntValue(n), IntValue(m)> : return BoolValue(n >= m); 
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n >= m);
+    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+  }
+}
+
+public Expression eval(LoEq(lhs, rhs), Context ctx) {
+  switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
+    case <IntValue(n), IntValue(m)> : return BoolValue(n <= m); 
+    case <BoolValue(n), BoolValue(m)> : return BoolValue(n <= m);
     default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
   }
 }
