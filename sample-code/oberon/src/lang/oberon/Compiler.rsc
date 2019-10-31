@@ -28,7 +28,8 @@ public str translateFunc(p){
 	str tFunc = "";
 	for(FDecl fp <- p.fns) {
 	  	top-down visit (fp) {
-	  		case FDecl(nF,_,_): tFunc = tFunc+nF+"(";
+	  		case FDecl(TInt(),nF,_,_): tFunc = tFunc+"int "+nF+"(";
+	  		case FDecl(TBool(),nF,_,_): tFunc = tFunc+"bool "+nF+"(";
 	  	}
 	  	for (Parameter pF <-fp.args){
 	  		if((indexOf(fp.args,pF))>0)
