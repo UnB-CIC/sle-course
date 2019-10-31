@@ -9,6 +9,7 @@ data OberonProgram = program(list[Variable] vars, list[FDecl] fns, Statement blo
 data Type = TInt()
           | TBool()     
           | TUndef()
+          | TError()
 		  ;
 
 data Variable = variable(Name name, Type varType)
