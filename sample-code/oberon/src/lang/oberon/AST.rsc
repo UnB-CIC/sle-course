@@ -38,5 +38,5 @@ data Statement = Assignment(Name var, Expression exp)
 
 data Parameter = Parameter(Name pmtName, Type pmtType);
 
-data FDecl = FDecl(Name name, FormalArgs args, Statement block)
+data FDecl = FDecl(Type returnType, Name name, FormalArgs args, Statement block)
            ;

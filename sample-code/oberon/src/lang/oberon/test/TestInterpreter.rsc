@@ -19,7 +19,7 @@ Statement mainBlock = BlockStmt([attrib1, whileStmt]);
 
 Expression returnExp = Add(VarRef("z"), IntValue(1));
 Statement retStmt = Return(returnExp);
-FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt); 
+FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt);
 
 public Context finalContext = context((f.name:f), ("x": IntValue(10)), empty());
 
