@@ -1,5 +1,5 @@
 module lang::oberon::Compiler
-import lang::oberon::Sample;
+
 import lang::oberon::AST;
 import IO;
 import List;
