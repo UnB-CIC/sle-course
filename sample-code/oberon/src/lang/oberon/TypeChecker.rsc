@@ -91,7 +91,7 @@ public Type wellTyped(LoEq(lhs, rhs), ctx) {
   }
 }
 
-public Type wellTyped(LoEq(lhs, rhs), ctx) {
+public Type wellTyped(Eq(lhs, rhs), ctx) {
   switch(<wellTyped(lhs, ctx), wellTyped(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();

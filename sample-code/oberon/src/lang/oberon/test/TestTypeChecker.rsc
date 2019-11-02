@@ -24,10 +24,10 @@ test bool testWellTypedNotExp() = TBool() == wellTyped(Not(BoolValue(true)), emp
 
 test bool testWellTypedGtExp() = TBool() == wellTyped(Gt(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedLtExp() = TBool() == wellTyped(Or(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testWellTypedLtExp() = TBool() == wellTyped(Lt(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedGoEqExp() = TBool() == wellTyped(Or(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testWellTypedGoEqExp() = TBool() == wellTyped(GoEq(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedLoEqExp() = TBool() == wellTyped(Or(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testWellTypedLoEqExp() = TBool() == wellTyped(LoEq(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedEqExp() = TBool() == wellTyped(Or(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testWellTypedEqExp() = TBool() == wellTyped(Eq(BoolValue(true), BoolValue(false)), emptyContext);
