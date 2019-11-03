@@ -22,23 +22,35 @@ public str translateMainBlock(Statement block){
 	return tBlock;
 }
 
-private str translateBlock(list[Statement] block) = ("" | it + translateStmtExpr(s) | s <- block);
-private str translateBlock(Statement block) = translateStmtExpr(block);
+public str translateBlock(list[Statement] block) = ("" | it + translateStmtExpr(s) | s <- block);
+public str translateBlock(Statement block) = translateStmtExpr(block);
 
-private str translateStmtExpr(stmt){
+public str translateStmtExpr(Statement stmt){
 	switch(stmt) {
-		case Print(r): return "print(<translateStmtExpr(r)>);\n";
 		case Assignment(n,v): return "<n> = <translateStmtExpr(v)>;\n";
-		case Return(r): return "return <translateStmtExpr(r)>;\n";
-		case BlockStmt(s): return ("" | it + translateStmtExpr(x) | x <- s);
+		case VarDecl(Variable v): return "<v.varType> <v.name>;";
+		case IfStmt(Expression condition, Statement stmtThen): return "if(<translateStmtExpr(condition)>){\n<translateStmtExpr(stmtThen)>}\n";
+		case IfElseStmt(Expression condition, Statement stmtThen, Statement stmtElse): return "if(<translateStmtExpr(condition)>){\n<translateStmtExpr(stmtThen)>}else{\n<translateStmtExpr(stmtElse)>\n";
 		case WhileStmt(e, b): return "while (<translateStmtExpr(e)>) {\n<translateStmtExpr(b)>\n}\n";
-		
-		case IntValue(i): return "<i>";
-		case Invoke(f,p): return "<f>(<("" | it + translateStmtExpr(e) | Expression e <- p)>);\n";
-		case VarRef(v): return "<v>";
-		case Lt(lhs,rhs): return "<translateStmtExpr(lhs)> \< <translateStmtExpr(rhs)>";
-		case Add(lhs,rhs): return "<translateStmtExpr(lhs)> + <translateStmtExpr(rhs)>";
+		case BlockStmt(s): return ("" | it + translateStmtExpr(x) | x <- s);
+		case Print(r): return "print(<translateStmtExpr(r)>);\n";
+		case Return(r): return "return <translateStmtExpr(r)>;\n";
 		default: throw "Translation for expression <stmt> not implemented";
+	}
+}
+
+public str translateStmtExpr(Expression expr){
+	switch(expr){		
+		case VarRef(v): return "<v>";
+		case IntValue(i): return "<i>";
+		case BoolValue(b): return "<b>";
+		case Add(lhs,rhs): return "<translateStmtExpr(lhs)> + <translateStmtExpr(rhs)>";
+		case And(Expression lhs,Expression rhs): "<translateStmtExpr(lhs)> && <translateStmtExpr(rhs)>";
+		case Not(Expression exp): "!<translateStmtExpr(exp)>";
+		case Gt(Expression lhs,Expression rhs): "<translateStmtExpr(lhs)> \> <translateStmtExpr(rhs)>";
+		case Lt(lhs,rhs): return "<translateStmtExpr(lhs)> \< <translateStmtExpr(rhs)>";
+		case Invoke(f,p): return "<f>(<("" | it + translateStmtExpr(e) | Expression e <- p)>);\n";
+		default: throw "Translation for expression <expr> not implemented";
 	}
 }
 
