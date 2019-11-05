@@ -1,13 +1,10 @@
 module lang::oberon::Sample
 
 import lang::oberon::AST;
-import lang::oberon::Interpreter;
-import lang::util::Stack;
-import lang::oberon::ExecutionContext;
 
-Variable var = variable("x",TInt());
-Variable varB = variable("y",TBool());
-Statement attrib1 = Assignment("x", IntValue(0));
+public Variable var = variable("x",TInt());
+public Variable varB = variable("y",TBool());
+public Statement attrib1 = Assignment("x", IntValue(0));
 Statement stmt = Print(VarRef("x"));
 Statement stmt2 = Print(VarRef("y"));
 
