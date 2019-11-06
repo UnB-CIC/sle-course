@@ -5,10 +5,10 @@ import lang::oberon::AST;
 public Variable var = variable("x",TInt());
 public Variable varB = variable("y",TBool());
 public Statement attrib1 = Assignment("x", IntValue(0));
-Statement stmt = Print(VarRef("x"));
+public Statement stmt = Print(VarRef("x"));
 Statement stmt2 = Print(VarRef("y"));
 
-Expression exp = Lt(VarRef("x"),IntValue(10));
+public Expression exp = Lt(VarRef("x"),IntValue(10));
 Statement attrib2 = Assignment("x",Invoke("inc", [VarRef("x")]));
 Statement whileBlk = BlockStmt([stmt, stmt2, attrib2]);
 Statement whileStmt = WhileStmt(exp,whileBlk);
