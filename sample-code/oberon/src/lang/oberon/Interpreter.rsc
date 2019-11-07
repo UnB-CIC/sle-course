@@ -10,9 +10,9 @@ import lang::util::Stack;
 import lang::oberon::ExecutionContext; 
 
 
-private Expression fromVar(Variable v) {
+public Expression fromVar(Variable v) {
   switch(v) {
-    case variableInit(v, _, val) : return val; 
+    case variableInit(n, _, val) : return val; 
     default: return Undefined(); 
   }
 }
@@ -98,21 +98,21 @@ public Expression eval(Add(lhs, rhs), Context ctx) {
 public Expression eval(Sub(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return IntValue(n - m); 
-    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <Sub(lhs, rhs)>"; 
   }
 }
 
 public Expression eval(Mult(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return IntValue(n * m); 
-    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <Mult(lhs, rhs)>"; 
   }
 }
 
 public Expression eval(Div(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return IntValue(n / m); 
-    default :  throw "Invalid Expression <Add(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <Div(lhs, rhs)>"; 
   }
 }
 
@@ -126,7 +126,7 @@ public Expression eval(And(lhs, rhs), Context ctx) {
 public Expression eval(Or(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <BoolValue(n), BoolValue(m)> : return BoolValue(n || m); 
-    default :  throw "Invalid Expression <And(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <Or(lhs, rhs)>"; 
   }
 }
 
@@ -141,7 +141,7 @@ public Expression eval(Gt(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n > m); 
     case <BoolValue(n), BoolValue(m)> : return BoolValue(n > m);
-    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <Gt(lhs, rhs)>"; 
   }
 }
 
@@ -157,7 +157,7 @@ public Expression eval(GoEq(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n >= m); 
     case <BoolValue(n), BoolValue(m)> : return BoolValue(n >= m);
-    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <GoEq(lhs, rhs)>"; 
   }
 }
 
@@ -165,7 +165,7 @@ public Expression eval(LoEq(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
     case <IntValue(n), IntValue(m)> : return BoolValue(n <= m); 
     case <BoolValue(n), BoolValue(m)> : return BoolValue(n <= m);
-    default :  throw "Invalid Expression <Lt(lhs, rhs)>"; 
+    default :  throw "Invalid Expression <LoEq(lhs, rhs)>"; 
   }
 }
 

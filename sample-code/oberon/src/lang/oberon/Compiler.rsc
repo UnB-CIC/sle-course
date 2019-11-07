@@ -44,11 +44,19 @@ public str translateStmtExpr(Expression expr){
 		case VarRef(v): return "<v>";
 		case IntValue(i): return "<i>";
 		case BoolValue(b): return "<b>";
+		case Undefined(): return "";
 		case Add(lhs,rhs): return "<translateStmtExpr(lhs)> + <translateStmtExpr(rhs)>";
+		case Sub(lhs,rhs): return "<translateStmtExpr(lhs)> - <translateStmtExpr(rhs)>";
+        case Mult(lhs, rhs): return "<translateStmtExpr(lhs)> * <translateStmtExpr(rhs)>";
+        case Div(lhs, rhs): return "<translateStmtExpr(lhs)> / <translateStmtExpr(rhs)>";
 		case And(Expression lhs,Expression rhs): "<translateStmtExpr(lhs)> && <translateStmtExpr(rhs)>";
+		case Or(lhs, rhs): return "<translateStmtExpr(lhs)> || <translateStmtExpr(rhs)>";
 		case Not(Expression exp): "!<translateStmtExpr(exp)>";
 		case Gt(Expression lhs,Expression rhs): "<translateStmtExpr(lhs)> \> <translateStmtExpr(rhs)>";
 		case Lt(lhs,rhs): return "<translateStmtExpr(lhs)> \< <translateStmtExpr(rhs)>";
+		case GoEq(lhs, rhs): return "<translateStmtExpr(lhs)> \>= <translateStmtExpr(rhs)>";
+		case LoEq(lhs, rhs): return "<translateStmtExpr(lhs)> \<= <translateStmtExpr(rhs)>";
+		case Eq(lhs, rhs): return "<translateStmtExpr(lhs)> == <translateStmtExpr(rhs)>";
 		case Invoke(f,p): return "<f>(<("" | it + translateStmtExpr(e) | Expression e <- p)>);\n";
 		default: throw "Translation for expression <expr> not implemented";
 	}

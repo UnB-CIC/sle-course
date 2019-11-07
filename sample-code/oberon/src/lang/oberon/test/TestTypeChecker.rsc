@@ -16,45 +16,54 @@ Statement whileStmt = WhileStmt(exp,whileBlk);
 Statement mainBlock = BlockStmt([attrib1, whileStmt]);
 Expression undefined = Undefined();
 
-
+public Context testContext =  context((), ("x" : IntValue(10)), empty());
 
 public Context emptyContext =  context((), (), empty());
 
-test bool testWellTypedAddExp() = TInt() == wellTyped(Add(IntValue(10), IntValue(7)), emptyContext);
+test bool testTypeOfAddExp() = TInt() == typeOf(Add(IntValue(10), IntValue(7)), emptyContext);
 
-test bool testWellTypedSubExp() = TInt() == wellTyped(Sub(IntValue(10), IntValue(7)), emptyContext);
+test bool testTypeOfSubExp() = TInt() == typeOf(Sub(IntValue(10), IntValue(7)), emptyContext);
 
-test bool testWellTypedMultExp() = TInt() == wellTyped(Mult(IntValue(10), IntValue(7)), emptyContext);
+test bool testTypeOfMultExp() = TInt() == typeOf(Mult(IntValue(10), IntValue(7)), emptyContext);
 
-test bool testWellTypedDivExp() = TInt() == wellTyped(Div(IntValue(14), IntValue(7)), emptyContext);
+test bool testTypeOfDivExp() = TInt() == typeOf(Div(IntValue(14), IntValue(7)), emptyContext);
 
-test bool testWellTypedAndExp() = TBool() == wellTyped(And(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfAndExp() = TBool() == typeOf(And(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedOrExp() = TBool() == wellTyped(Or(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfOrExp() = TBool() == typeOf(Or(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedNotExp() = TBool() == wellTyped(Not(BoolValue(true)), emptyContext);
+test bool testTypeOfNotExp() = TBool() == typeOf(Not(BoolValue(true)), emptyContext);
 
-test bool testWellTypedGtExp() = TBool() == wellTyped(Gt(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfGtExp() = TBool() == typeOf(Gt(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedLtExp() = TBool() == wellTyped(Lt(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfLtExp() = TBool() == typeOf(Lt(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedGoEqExp() = TBool() == wellTyped(GoEq(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfGoEqExp() = TBool() == typeOf(GoEq(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedLoEqExp() = TBool() == wellTyped(LoEq(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfLoEqExp() = TBool() == typeOf(LoEq(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedEqExp() = TBool() == wellTyped(Eq(BoolValue(true), BoolValue(false)), emptyContext);
+test bool testTypeOfEqExp() = TBool() == typeOf(Eq(BoolValue(true), BoolValue(false)), emptyContext);
 
-test bool testWellTypedWhileStmt() = TBool() == wellTyped(WhileStmt(BoolValue(true),attrib1),emptyContext);
+test bool testTypeOfVarRefExp() = TInt() == typeOf(VarRef("x"), testContext);
 
-test bool testWellTypedIfStmt() = TBool() == wellTyped(IfStmt(BoolValue(true),attrib2),emptyContext);
 
-test bool testWellTypedIfElseStmt() = TBool() == wellTyped(IfElseStmt(BoolValue(true),attrib1,attrib2),emptyContext);
+//Statments tests
 
-test bool testWellTypedPrintStmt() = TInt() == wellTyped(Print(IntValue(10)),emptyContext);
+test bool testWellTypedWhileStmt() = true == wellTyped(WhileStmt(exp,stmt),testContext);
 
-test bool testWellTypedReturnStmt() = TInt() == wellTyped(Return(IntValue(10)),emptyContext);
+test bool testWellTypedIfStmt() = true == wellTyped(IfStmt(BoolValue(true),attrib2),emptyContext);
 
-test bool testWellTypedAssignmentStmt() = TUndef() == wellTyped(Assignment("w",undefined),emptyContext);
+test bool testWellTypedIfElseStmt() = true == wellTyped(IfElseStmt(BoolValue(true),attrib1,attrib2),emptyContext);
 
-//test bool testWellTypedVarDeclStmt() = TUndef() == wellTyped(VarDecl(var),emptyContext);
+test bool testWellTypedPrintStmt() = true == wellTyped(Print(IntValue(10)),emptyContext);
+
+test bool testWellTypedReturnStmt() = true == wellTyped(Return(IntValue(10)),emptyContext);
+
+test bool testWellTypedAssignmentStmt() = true == wellTyped(attrib1,testContext);
+
+test bool testWellTypedBlockStmt() = false == wellTyped(BlockStmt([stmt, Assignment("x", BoolValue(true))]),testContext);
+
+test bool testWellTypedVarDeclStmt() = true == wellTyped(VarDecl(var),emptyContext);
+
+
 
