@@ -1,0 +1,25 @@
+MODULE Test;
+
+PROCEDURE inc : INTEGER (x: INTEGER);
+BEGIN
+    RETURN x + 1;
+END inc;
+
+PROCEDURE is10 : VOID (x: INTEGER);
+BEGIN
+	IF x = 10 THEN
+		PRINT x;
+	ELSE
+		PRINT x + 1;
+	END;
+END is10;
+
+VAR x: INTEGER; y: BOOLEAN;
+
+BEGIN
+    y := TRUE;
+    WHILE x # 10 DO
+        PRINT x;
+        x := inc(x);
+    END;
+END Test.
