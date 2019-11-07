@@ -59,9 +59,11 @@ test bool testWellTypedPrintStmt() = true == wellTyped(Print(IntValue(10)),empty
 
 test bool testWellTypedReturnStmt() = true == wellTyped(Return(IntValue(10)),emptyContext);
 
-test bool testWellTypedAssignmentStmt() = true == wellTyped(Assignment("w",undefined),emptyContext);
+test bool testWellTypedAssignmentStmt() = true == wellTyped(attrib1,testContext);
 
-test bool testWellTypedBlockStmt() = true == wellTyped(BlockStmt([stmt, attrib1]),testContext);
+test bool testWellTypedBlockStmt() = false == wellTyped(BlockStmt([stmt, Assignment("x", BoolValue(true))]),testContext);
+
+test bool testWellTypedVarDeclStmt() = true == wellTyped(VarDecl(var),emptyContext);
 
 
 

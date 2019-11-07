@@ -3,8 +3,10 @@ module lang::oberon::TypeChecker
 import lang::oberon::AST;
 import lang::util::Stack;
 import lang::oberon::ExecutionContext;
+import lang::oberon::Interpreter;
 import List;
 import Map;
+import IO;
 
 public Type typeOf(IntValue(v), ctx) = TInt();
 
@@ -122,11 +124,12 @@ public bool wellTyped(WhileStmt(c,stmt), ctx){
 }
 
 public bool wellTyped(BlockStmt(list[Statement] stmts), ctx) { 
-	m = toList((s : wellTyped(s,ctx) | s <- stmts));
-	switch(m){
-		case <false> : return false;
-		default : return true; 
+	m = [wellTyped(s,ctx) | s <- stmts];
+	println(m);
+	if(false in m){
+		return false;
 	}
+	return true;
 }
 
 public bool wellTyped(IfStmt(c,stmt), ctx){
@@ -161,11 +164,23 @@ public bool wellTyped(Return(e), ctx) {
 }  
 
 public bool wellTyped(Assignment(n, e), ctx){
-  switch(<typeOf(e, ctx)>) {
-    case <TBool()>: return true;
-    case <TInt()>: return true;
-    case <TUndef()>: return true;
+  switch(<typeOf(VarRef(n), ctx), typeOf(e, ctx)>) {
+   case <TInt(), TInt()> : return true; 
+    case <TBool(), TBool()> : return true;
+    case <TUndef(), TUndef()>: return true;
     default : return false; 
+  }
+}
+
+
+public bool wellTyped(VarDecl(v), ctx) {
+  switch(<v.varType,typeOf(fromVar(v), ctx)>) {
+   case <TInt(), TInt()> : return true; 
+    case <TBool(), TBool()> : return true;
+    case <TUndef(), TUndef()>: return true;
+    case <TInt(), TUndef()>: return true;
+    case <TBool(), TUndef()>: return true;
+    default : return false;
   }
 }
 

@@ -10,9 +10,9 @@ import lang::util::Stack;
 import lang::oberon::ExecutionContext; 
 
 
-private Expression fromVar(Variable v) {
+public Expression fromVar(Variable v) {
   switch(v) {
-    case variableInit(v, _, val) : return val; 
+    case variableInit(n, _, val) : return val; 
     default: return Undefined(); 
   }
 }
