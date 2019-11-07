@@ -125,7 +125,7 @@ private Expression parseExp(SimpleExpression exp) {
 			return parseExp(t);
 		}
 		case (SimpleExpression)`- <Term t>`: {
-			return Sub(IntValue(0), parseExp(t));
+			return Neg(parseExp(t));
 		}
 		default: return Undefined(); 
 	}

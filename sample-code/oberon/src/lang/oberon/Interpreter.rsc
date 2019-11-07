@@ -68,7 +68,7 @@ public Context execute(BlockStmt([]), Context ctx) = ctx;
 
 public Context execute(BlockStmt([c,*cs]), Context ctx1) { 
   switch(c) {
-    case Return(e) : return execute(f); 
+    case Return(e) : return execute(Return(e),ctx1); 
     default: { 
        Context ctx2 = execute(c, ctx1); 
        return execute(BlockStmt(cs), ctx2); 
