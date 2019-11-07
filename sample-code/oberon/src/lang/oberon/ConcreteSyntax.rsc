@@ -8,6 +8,8 @@ module lang::oberon::ConcreteSyntax
 // TODO: WS : ( ' ' | '\t' | '\r' | '\n') -> skip;
 // TODO: COMMENT : '(*' .*? '*)' -> skip;
 
+start syntax Oberon = Module? mod;
+
 lexical PERIOD = "." ;
 lexical RANGESEP = "..";
 lexical SEMI = ";";
@@ -59,6 +61,8 @@ syntax MulOperator
     ;
 
 lexical ID = [a-zA-Z][a-zA-Z_0-9]*;
+//lexical ID = [A-Z]*;
+//lexical ID = "I";
 
 lexical INT = [0-9]+ ;
 lexical REAL = [0-9]+[.][0-9]+ ;
@@ -76,7 +80,7 @@ syntax Factor
 	| boolean_factor: Boolean
 	| string_factor: STRING
 	| nil_type: NIL
-	| set_factor: SET
+	| set_factor: Set
 	| designator_factor: Designator
 	| simpleExpression_factor: "(" SimpleExpression ")"
 	| procedurecall_factor: ProcedureCall
@@ -130,6 +134,8 @@ syntax ProcedureDeclaration = ProcedureHeading SEMI ProcedureBody ID;
 syntax ProcedureHeading = "PROCEDURE" IdentDef "*"? FormalParameters?;
 syntax ProcedureBody = DeclarationSequence? ("BEGIN" StatementSequence)? "END";
 
+syntax Assignment = Designator ASSIGN Expression;
+
 syntax WhileStatement = "WHILE" Expression "DO" StatementSequence "END";
 syntax RepeatStatement = "REPEAT" StatementSequence "UNTIL" Expression;
 syntax LoopStatement = "LOOP" StatementSequence "END";
@@ -141,7 +147,7 @@ syntax CaseLabelList = CaseLabels (COMMA CaseLabels)*;
 syntax CaseLabels = Expression (RANGESEP Expression)?;
 
 syntax Module = "MODULE" ID SEMI DeclarationSequence? ModuleDeclarations* ("BEGIN" StatementSequence)? "END" ID PERIOD ;
-syntax ModuleDeclarations = ProcedureDeclaration SEMI | ForwardFeclaration SEMI;
+syntax ModuleDeclarations = ProcedureDeclaration SEMI | ForwardDeclaration SEMI;
 syntax ImportList = "IMPORT" ImportItem (COMMA ImportItem)* SEMI;
 syntax ImportItem = ID (ASSIGN ID)?;
 
@@ -162,6 +168,14 @@ syntax Statement = Assignment
         ;
 
 syntax WithStatement = "WITH" Qualident COLON Qualident "DO" StatementSequence "END";
+
+lexical Comment = "//" ![\n]* [\n];
+
+lexical Spaces = [\n\r\f\t\ ]*;
+
+layout Layout = Spaces 
+              | Comment 
+              ;
 
 keyword Keywords
 	= "ARRAY"

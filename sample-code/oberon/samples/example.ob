@@ -1,0 +1,6 @@
+MODULE Test;
+
+VAR x: INTEGER;
+BEGIN
+    x := -x * y + FALSE + z(x, y);
+END Test.
