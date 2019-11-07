@@ -20,7 +20,7 @@ Statement mainBlock = BlockStmt([attrib1, whileStmt]);
 
 Expression returnExp = Add(VarRef("z"), IntValue(1));
 Statement retStmt = Return(returnExp);
-FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt);
+FDecl f = FDecl(TInt(),"inc", [Parameter("z", TInt())], retStmt);
 
 public Context emptyContext =  context((), (), empty());
 
@@ -65,8 +65,6 @@ test bool testValidLoEq() = BoolValue(true) == eval(LoEq(VarRef("x"),IntValue(15
 
 test bool testExecuteAssignment() = expected == execute(Assignment("x", IntValue(30)), ctx);
 
-test bool testExecuteIfStmt() = expected == execute(IfStmt(BoolValue(true),Assignment("x", IntValue(30))), ctx);
+test bool testExecuteIfStmt() = expected == execute(IfStmt(Lt(VarRef("x"),IntValue(30)),Assignment("x", Add(VarRef("x"), IntValue(20)))), ctx);
 
 test bool testExecuteIfElseStmt() = expected == execute(IfElseStmt(BoolValue(true),Assignment("x", IntValue(30)), Print(VarRef("x"))), ctx);
-
-//test bool testExecuteIfStmt() = expected == execute(IfStmt(Lt(VarRef("x"),IntValue(30)),Assignment("x", Add(VarRef("x"), IntValue(20)))), ctx);
