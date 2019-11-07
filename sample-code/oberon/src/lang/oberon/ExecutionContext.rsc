@@ -1,7 +1,8 @@
 module lang::oberon::ExecutionContext
 
 import lang::util::Stack;
-import lang::oberon::AST; 
+import lang::oberon::AST;
+import lang::oberon::Interpreter; 
 
 alias Memory = map[Name, Expression];
 alias Static = Memory;
@@ -27,13 +28,13 @@ public Context declareFunction(FDecl f, context(fs, s, heap)) {
 
 public Context setGlobal(Name var, Expression exp, context(fs, s, heap)) {
    s1 = s; 
-   s1[var] = exp; 
+   s1[var] = eval(exp,context(fs,s,heap)); 
    return context(fs, s1, heap);
 }
 
 public Context setLocal(Name var, Expression exp, context(fs, s, heap)) {
    current = top(heap);
-   current[var] = exp; 
+   current[var] = eval(exp,context(fs,s,heap)); 
    <h, t> = pop(heap);
    return context(fs, s, push(current, t));      
 }
