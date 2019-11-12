@@ -2,155 +2,82 @@ module lang::oberon::RestrictedConcreteSyntax
 
 start syntax Oberon = Module? mod;
 
-syntax Module = "MODULE" ID ";" "BEGIN" Statements "END" ID "."
-			  > "MODULE" ID ";" Procedures "BEGIN" Statements "END" ID "."
-			  > "MODULE" ID ";" Declarations "BEGIN" Statements "END" ID "."
-			  > "MODULE" ID ";" Procedures Declarations "BEGIN" Statements "END" ID "."
+syntax Module = "MODULE" Identifier ";" Procedures? Declarations? "BEGIN" Statements "END" Identifier "."
 			  ;			
 
 syntax Procedures = ProcedureDeclaration+;
 
-syntax Declarations = "VAR" (VariableDeclaration ";")+
+syntax Declarations = "VAR" VariableDeclaration+
 					;
 
-syntax ProcedureDeclaration = ProcedureHeading ";" ProcedureBody ID ";";
-syntax ProcedureHeading = "PROCEDURE" ID ":" Type
-					 	> "PROCEDURE" ID ":" Type "(" VarList ")"
-					 	;
+syntax ProcedureDeclaration = "PROCEDURE" Identifier "(" FormalArgs ")" (":" Type)? ProcedureBody Identifier ";";
 					 	
-syntax VarList  = VariableDeclaration
-				> VariableDeclaration "," VarList
-				;
+syntax FormalArgs = {("VAR"? Identifier ":" Type) ","}*; 
 					 	
-syntax ProcedureBody = "BEGIN" Statements "END"
-				 	 > Declarations "BEGIN" Statements "END"
+					 	
+syntax ProcedureBody = Declarations? "BEGIN" Statements "END"
 				 	 ;
 					 	
-syntax VariableDeclaration = ID ":" Type;
+syntax VariableDeclaration = Identifier ":" Type (":=" Expression )? ";";
 
-syntax Statements = (Statement ";")* ;
+syntax Statements = Statement* ;
 
 syntax Statement = Assignment
-        | ProcedureCall
-        | IfStatement
-        | WhileStatement
-        | ReturnStatement
-        | PrintStatement
-        ;
+                 | IfStatement
+                 | IfElseStatement
+                 | PrintStatement
+                 | ReturnStatement
+                 | VarDeclStatement   
+                 | WhileStatement         
+                 ;
 
-syntax Assignment = ID ":=" ComposedExpression;
+syntax Assignment = Identifier ":=" Expression ";";
 
-syntax ReturnStatement = "RETURN" > "RETURN" ComposedExpression;
+syntax IfStatement = "IF" Expression "THEN" Statements "END";
 
-syntax PrintStatement = "PRINT" > "PRINT" ComposedExpression;
+syntax IfElseStatement = "IF" Expression "THEN" Statements "ELSE" Statements "END";
 
-syntax WhileStatement = "WHILE" ComposedExpression "DO" Statements "END";
+syntax PrintStatement = "PRINT" Expression? ";";
+ 
+syntax ReturnStatement = "RETURN" Expression? ";" ;
 
-syntax ComposedExpression = SimpleExpression > SimpleExpression Relation SimpleExpression;
-syntax SimpleExpression = Term 
-						| SimpleExpression AddOperator Term
-						> MINUS Term
-						| SimpleExpression AddOperator Term 
-						;
-syntax Term = Factor > Term MulOperator Factor;
+syntax VarDeclStatement = "VAR" VariableDeclaration;
+ 
+syntax WhileStatement = "WHILE" Expression "DO" Statements "END";
 
-syntax Factor
-	= BOOLEAN 
-	| INT 
-	| ProcedureCall 
-	> ID \ "TRUE" \ "FALSE"
-	| "(" ComposedExpression ")"
-	| NOT Factor
-	;
+syntax Expression = BOOLEAN
+                  | INT 
+                  | Identifier
+                  | Identifier "(" ExpressionList ")" 
+                  | "~" Expression
+                  | "-" Expression
+                  > left ( Expression "*" Expression 
+                         | Expression "/" Expression 
+                         | left Expression "&" Expression
+                         )
+                  > left ( Expression "+" Expression 
+                         | Expression "-" Expression 
+                         | Expression "|" Expression
+                         )                   
+                  > left ( Expression "=" Expression 
+                         | Expression "#" Expression 
+                         | Expression "\>" Expression 
+                         | Expression "\<" Expression 
+                         | Expression "\>=" Expression 
+                         | Expression "\<=" Expression
+                         ) 
+                  | "(" Expression ")" ;
 	
+syntax ExpressionList = {Expression ","}* ;
+	
+lexical Identifier = ([a-zA-Z][a-zA-Z_0-9]*) \KeywordSet;
+
 syntax BOOLEAN = "TRUE" | "FALSE";
 
-lexical ID = [a-zA-Z][a-zA-Z_0-9]* \ Keywords;
+lexical INT = [1-9][0-9]*;	
 
-lexical INT = [0-9]+;	
+syntax Type = "INTEGER" | "BOOLEAN" ;
 
-lexical PERIOD = "." ;
-lexical RANGESEP = "..";
-lexical SEMI = ";";
-lexical UPCHAR = "^";
-lexical COLON = ":";
-lexical COMMA = ",";
-lexical NOT = "~";
-
-lexical UNEQUAL = "#";
-lexical LESS = "\<"; // Escape tá certo?
-lexical GREATER = "\>";  // Escape
-lexical LESSOREQ = "\<=";  // Escape
-lexical GREATEROREQ = "\>=";  // Escape
-lexical IN = "IN";
-lexical EQUAL = "=";
-
-lexical ASSIGN = ":=";
-lexical DIV = "DIV" ;
-lexical DIVISION = "/";
-lexical AND = "&";
-lexical MINUS = "-";
-lexical MOD = "MOD";
-lexical MULT = "*";
-lexical OR = "|";
-lexical PLUS = "+";
-
-syntax AddOperator
-	= op: PLUS
-    | op: MINUS 
-    | op: OR
-    ;
-            
-syntax Relation
-	= op: EQUAL 
-    | op: UNEQUAL 
-    | op: LESS 
-    | op: GREATER 
-    | op: LESSOREQ 
-    | op: GREATEROREQ 
-    | op: IN
-    ;
-    
-syntax MulOperator
-	= op: MULT 
-    | op: DIVISION
-    | op: DIV 
-    | op: MOD 
-    | op: AND
-    ;
-
-syntax Explist = ComposedExpression | ComposedExpression "," Explist;
-
-syntax ProcedureCall = ID ActualParameters;
-syntax ActualParameters = "(" Explist? ")";
-
-syntax CaseLabelList = CaseLabels (COMMA CaseLabels)* ;
-syntax CaseLabels = ComposedExpression (RANGESEP ComposedExpression)?;
-
-syntax Set = '{' CaseLabelList? '}' ;
-
-syntax ConstantDeclaration = IdentDef EQUAL ComposedExpression;
-
-syntax IdentDef = ID;
-syntax IdentList = IdentDef (COMMA IdentDef)*;
-
-syntax Type = BaseTypes; // TODO: | isArr=arraytype;
-syntax BaseTypes = "INTEGER" | "BOOLEAN" | "VOID";
-
-syntax ProcedureType = "PROCEDURE" FormalParameters? ;
-
-syntax FieldList = (IdentList COLON Type)?;
-syntax FieldListSequence = FieldList (SEMI FieldList);
-
-syntax FpSection = "VAR"? IdList COLON Type ;
-syntax Params = FpSection (SEMI FpSection)*;
-syntax FormalParameters = "(" Params? ")" (COLON Type)? ;
-
-syntax IfStatement = "IF" ComposedExpression "THEN" Statements "END"
-				   > "IF" ComposedExpression "THEN" Statements ("ELSIF" ComposedExpression "THEN" Statements)+ "END"
-				   > "IF" ComposedExpression "THEN" Statements ("ELSIF" ComposedExpression "THEN" Statements)+ "ELSE" Statements "END"
-				   > "IF" ComposedExpression "THEN" Statements "ELSE" Statements "END"
-				   ;
 
 lexical Comment = "//" ![\n]* [\n];
 
@@ -160,16 +87,12 @@ layout Layout = Spaces
               | Comment 
               ;
 
-keyword Keywords
+keyword KeywordSet
 	= "BEGIN"
-	| "DO"
 	| "ELSE"
-	| "ELSIF"
 	| "END"
-	| "EXIT"
 	| "IF"
 	| "MODULE"
-	| "OF"
 	| "PROCEDURE"
 	| "RETURN"
 	| "THEN"
@@ -177,12 +100,8 @@ keyword Keywords
 	| "TYPE"
 	| "VAR"
 	| "WHILE"
-	| "TRUE"
-	| "FALSE"
-	| "PRINT"
-	| "INTEGER"
-	| "BOOLEAN"
-	| "NOTHING"
 	| "PRINT"
 	| "VOID"
+	| "TRUE"
+	| "FALSE"
 	;
