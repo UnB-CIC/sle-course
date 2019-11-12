@@ -9,6 +9,8 @@ import List;
 import Map;
 import IO;
 
+
+
 public Type typeOf(IntValue(v), Context ctx) = TInt();
 
 public Type typeOf(BoolValue(v), Context ctx) = TBool();
@@ -180,5 +182,44 @@ public bool wellTyped(VarDecl(v),Context ctx) {
   }
 }
 
+//public bool wellTyped(Parameters(list[Parameter] pmts),Context ctx) = (true|wellTyped(p, ctx) && it |p <- pmts);
 
+public bool wellTyped(Parameter(n,t),Context ctx) {
+	switch(t){
+	case TBool(): return true;
+    case TInt(): return true;
+    default : return false; 
+
+	}
+}
+
+public bool wellTyped(pmts, Context ctx) = (true| wellTyped(p, ctx) && it | p <- pmts);
+
+
+public bool wellTyped(FDecl(t, n, args, block), Context ctx) {
+	return wellTyped(t, ctx) && wellTyped(args, ctx) && wellTyped(block, ctx); 
+}
+
+public bool wellTyped(TInt(), Context ctx)   = true;
+public bool wellTyped(TBool(), Context ctx)  = true;
+public bool wellTyped(TUndef(), Context ctx) = true;
+public bool wellTyped(TError(), Context ctx) = false; 
+
+
+//public bool wellTyped(OberonProgram(list[Variable] vars, list[FDecl] fns, Statement block)){
+//	switch(<wellTyped(FDecl(rt),ctx), wellTyped(a,ctx), wellTyped(b,ctx)>) {
+//	    case <TBool(), true, true> : return true; 
+//	    case <TInt(), true, true> : return true; 
+//	    default : return false;
+//    }
+//}
+
+//public Expression eval(Invoke(n, pmts), Context ctx){
+//  FDecl f = lookup(n, ctx.fnDecls);
+//  ctx = notifyInvoke((a.pmtName : eval(b, ctx) | <a,b> <- zip(f.args, pmts)), ctx);
+//  ctx = execute(f.block, ctx);
+//  exp = top(ctx.heap)["return"];
+//  ctx = notifyReturn(ctx);
+//  return exp;
+//}
 

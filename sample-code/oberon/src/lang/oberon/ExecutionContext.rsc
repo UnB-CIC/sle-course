@@ -3,11 +3,7 @@ module lang::oberon::ExecutionContext
 import lang::util::Stack;
 import lang::oberon::AST;
 import lang::oberon::Interpreter; 
-
-alias Memory = map[Name, Expression];
-alias Static = Memory;
-
-data Context = context(map[Name, FDecl] fnDecls, Static global, Stack[Memory] heap);
+import lang::oberon::AbstractContext; 
 
 data Exception = nonDeclaredVariable(); 
 
