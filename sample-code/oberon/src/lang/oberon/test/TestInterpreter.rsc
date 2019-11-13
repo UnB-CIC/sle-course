@@ -3,7 +3,7 @@ module lang::oberon::\test::TestInterpreter
 import lang::oberon::AST;
 import lang::oberon::Interpreter;
 import lang::util::Stack;
-import lang::oberon::ExecutionContext;
+import lang::oberon::Context;
 
 import IO;
 
@@ -22,13 +22,13 @@ Expression returnExp = Add(VarRef("z"), IntValue(1));
 Statement retStmt = Return(returnExp);
 FDecl f = FDecl(TInt(),"inc", [Parameter("z", TInt())], retStmt);
 
-public Context emptyContext =  context((), (), empty());
+public Context[Expression] emptyContext =  context((), (), empty());
 
-public Context finalContext = context((f.name:f), ("x": IntValue(10)), empty());
+public Context[Expression] finalContext = context((f.name:f), ("x": IntValue(10)), empty());
 
-public Context ctx = context((), ("x" : IntValue(10), "y" : BoolValue(true), "z" : IntValue(100)), empty());
+public Context[Expression] ctx = context((), ("x" : IntValue(10), "y" : BoolValue(true), "z" : IntValue(100)), empty());
 
-public Context expected = context((), ("x" : IntValue(30), "y" : BoolValue(true), "z" : IntValue(100)), empty());
+public Context[Expression] expected = context((), ("x" : IntValue(30), "y" : BoolValue(true), "z" : IntValue(100)), empty());
 
 public OberonProgram prg = program([var], [f], mainBlock);
 

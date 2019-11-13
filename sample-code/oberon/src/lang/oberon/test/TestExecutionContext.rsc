@@ -3,18 +3,18 @@ module lang::oberon::\test::TestExecutionContext
 import lang::util::Stack;
 
 import lang::oberon::AST; 
-import lang::oberon::ExecutionContext;
+import lang::oberon::Context;
 
 
 // setup
 Expression returnExp = Add(VarRef("z"), IntValue(1));
 Statement retStmt = Return(returnExp);
-FDecl f = FDecl("inc", [Parameter("z", TInt())], retStmt); 
+FDecl f = FDecl(TInt(), "inc", [Parameter("z", TInt())], retStmt); 
 
-Context ctx1 = setLocal("x", IntValue(5), notifyInvoke(initContext()));
-Context ctx2 = context((), (), push((), push(("x": IntValue(5)), empty())));
-Context ctx3 = context((), ("x" : IntValue(10)), push((), push(("x": IntValue(5)), empty())));
-Context ctx4 = context((), (), push(("x": IntValue(10)), empty()));
+Context[Expression] ctx1 = setLocal("x", IntValue(5), notifyInvoke(initContext()));
+Context[Expression] ctx2 = context((), (), push((), push(("x": IntValue(5)), empty())));
+Context[Expression] ctx3 = context((), ("x" : IntValue(10)), push((), push(("x": IntValue(5)), empty())));
+Context[Expression] ctx4 = context((), (), push(("x": IntValue(10)), empty()));
 
 test bool testInitContext() = context((), (), empty()) == initContext();
 

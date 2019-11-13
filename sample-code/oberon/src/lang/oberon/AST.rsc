@@ -36,7 +36,6 @@ data Expression = VarRef(Name name)
                 ;
                 
 data Statement = Assignment(Name var, Expression exp)
-               | VarDecl(Variable v)
                | IfStmt(Expression condition, Statement stmtThen)
                | IfElseStmt(Expression condition, Statement stmtThen, Statement stmtElse)
                | WhileStmt(Expression condition, Statement stmt)

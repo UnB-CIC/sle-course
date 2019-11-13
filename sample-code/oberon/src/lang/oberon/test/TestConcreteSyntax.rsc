@@ -115,7 +115,6 @@ test bool testVarDeclStatement() {
 }
 
 
-// PROCEDURE inc(x : INTEGER) : INTEGER VAR x : INTEGER := 1; BEGIN x := x + z; RETURN x; END inc;
 test bool testProcedureDecl() {
 	try {
 		str procedure = "PROCEDURE inc(x : INTEGER) : INTEGER 
