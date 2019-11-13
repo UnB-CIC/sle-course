@@ -4,66 +4,69 @@ import lang::oberon::AST;
 import lang::util::Stack;
 import lang::oberon::ExecutionContext;
 import lang::oberon::Interpreter;
+import lang::util::List;
 import List;
 import Map;
 import IO;
 
-public Type typeOf(IntValue(v), ctx) = TInt();
 
-public Type typeOf(BoolValue(v), ctx) = TBool();
 
-public Type typeOf(Undefined(), ctx) = TUndef();
+public Type typeOf(IntValue(v), Context ctx) = TInt();
 
-public Type typeOf(Add(lhs,rhs), ctx) {
+public Type typeOf(BoolValue(v), Context ctx) = TBool();
+
+public Type typeOf(Undefined(), Context ctx) = TUndef();
+
+public Type typeOf(Add(lhs,rhs), Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TInt(); 
     default :  return TError();
   }
 }
 
-public Type typeOf(Sub(lhs,rhs), ctx) {
+public Type typeOf(Sub(lhs,rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TInt(); 
     default :  return TError();
   }
 }
 
-public Type typeOf(Mult(lhs,rhs), ctx) {
+public Type typeOf(Mult(lhs,rhs), Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TInt(); 
     default :  return TError();
   }
 }
 
-public Type typeOf(Div(lhs,rhs), ctx) {
+public Type typeOf(Div(lhs,rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TInt(); 
     default :  return TError();
   }
 }
 
-public Type typeOf(And(lhs,rhs), ctx) {
+public Type typeOf(And(lhs,rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TBool(), TBool()> : return TBool(); 
     default :  return TError();
   }
 }
 
-public Type typeOf(Or(lhs,rhs), ctx) {
+public Type typeOf(Or(lhs,rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TBool(), TBool()> : return TBool(); 
     default : return TError();
   }
 }
 
-public Type typeOf(Not(exp), ctx) {
+public Type typeOf(Not(exp),Context ctx) {
   switch(<typeOf(exp,ctx)>) {
     case <TBool()> : return TBool(); 
     default : return TError();
   }
 }
 
-public Type typeOf(Gt(lhs, rhs), ctx) {
+public Type typeOf(Gt(lhs, rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();
@@ -71,7 +74,7 @@ public Type typeOf(Gt(lhs, rhs), ctx) {
   }
 }
 
-public Type typeOf(Lt(lhs, rhs), ctx) {
+public Type typeOf(Lt(lhs, rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();
@@ -79,7 +82,7 @@ public Type typeOf(Lt(lhs, rhs), ctx) {
   }
 }
 
-public Type typeOf(GoEq(lhs, rhs), ctx) {
+public Type typeOf(GoEq(lhs, rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();
@@ -87,7 +90,7 @@ public Type typeOf(GoEq(lhs, rhs), ctx) {
   }
 }
 
-public Type typeOf(LoEq(lhs, rhs), ctx) {
+public Type typeOf(LoEq(lhs, rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();
@@ -95,7 +98,7 @@ public Type typeOf(LoEq(lhs, rhs), ctx) {
   }
 }
 
-public Type typeOf(Eq(lhs, rhs), ctx) {
+public Type typeOf(Eq(lhs, rhs),Context ctx) {
   switch(<typeOf(lhs, ctx), typeOf(rhs, ctx)>) {
     case <TInt(), TInt()> : return TBool(); 
     case <TBool(), TBool()> : return TBool();
@@ -103,7 +106,7 @@ public Type typeOf(Eq(lhs, rhs), ctx) {
   }
 }
 
-public Type typeOf(VarRef(n), ctx) {
+public Type typeOf(VarRef(n),Context ctx) {
   if(n in top(ctx.heap)) {
   	return typeOf(top(ctx.heap)[n],ctx);
   }
@@ -116,30 +119,25 @@ public Type typeOf(VarRef(n), ctx) {
 
 //Statments TypeChecker
 
-public bool wellTyped(WhileStmt(c,stmt), ctx){
+public bool wellTyped(WhileStmt(c,stmt),Context ctx){
 	switch(<typeOf(c,ctx)>) {
 	    case <TBool()> : return wellTyped(stmt,ctx); 
 	    default : return false;
     }
 }
 
-public bool wellTyped(BlockStmt(list[Statement] stmts), ctx) { 
-	m = [wellTyped(s,ctx) | s <- stmts];
-	println(m);
-	if(false in m){
-		return false;
-	}
-	return true;
-}
+public bool wellTyped(BlockStmt(list[Statement] stmts), Context ctx) = (true|wellTyped(s, ctx) && it |s <- stmts);
+//and([wellTyped(s,ctx) | s <- stmts]);
 
-public bool wellTyped(IfStmt(c,stmt), ctx){
+
+public bool wellTyped(IfStmt(c,stmt),Context ctx){
 	switch(<typeOf(c,ctx)>) {
 	    case <TBool()> : return true; 
 	    default : return false;
     }
 }
 
-public bool wellTyped(IfElseStmt(c,stmtThen, stmtElse), ctx){
+public bool wellTyped(IfElseStmt(c,stmtThen, stmtElse),Context ctx){
 	switch(<typeOf(c,ctx)>) {
 	    case <TBool()> : return true;
 	    default : return false;
@@ -147,7 +145,7 @@ public bool wellTyped(IfElseStmt(c,stmtThen, stmtElse), ctx){
 }
 
 
-public bool wellTyped(Print(e), ctx) {
+public bool wellTyped(Print(e),Context ctx) {
   switch(<typeOf(e, ctx)>) {
     case <TBool()>: return true;
     case <TInt()>: return true;
@@ -155,7 +153,7 @@ public bool wellTyped(Print(e), ctx) {
   }
 }
 
-public bool wellTyped(Return(e), ctx) {
+public bool wellTyped(Return(e),Context ctx) {
   switch(<typeOf(e, ctx)>) {
     case <TBool()>: return true;
     case <TInt()>: return true;
@@ -163,7 +161,7 @@ public bool wellTyped(Return(e), ctx) {
   }
 }  
 
-public bool wellTyped(Assignment(n, e), ctx){
+public bool wellTyped(Assignment(n, e),Context ctx){
   switch(<typeOf(VarRef(n), ctx), typeOf(e, ctx)>) {
    case <TInt(), TInt()> : return true; 
     case <TBool(), TBool()> : return true;
@@ -173,7 +171,7 @@ public bool wellTyped(Assignment(n, e), ctx){
 }
 
 
-public bool wellTyped(VarDecl(v), ctx) {
+public bool wellTyped(VarDecl(v),Context ctx) {
   switch(<v.varType,typeOf(fromVar(v), ctx)>) {
    case <TInt(), TInt()> : return true; 
     case <TBool(), TBool()> : return true;
@@ -184,5 +182,44 @@ public bool wellTyped(VarDecl(v), ctx) {
   }
 }
 
+//public bool wellTyped(Parameters(list[Parameter] pmts),Context ctx) = (true|wellTyped(p, ctx) && it |p <- pmts);
 
+public bool wellTyped(Parameter(n,t),Context ctx) {
+	switch(t){
+	case TBool(): return true;
+    case TInt(): return true;
+    default : return false; 
+
+	}
+}
+
+public bool wellTyped(pmts, Context ctx) = (true| wellTyped(p, ctx) && it | p <- pmts);
+
+
+public bool wellTyped(FDecl(t, n, args, block), Context ctx) {
+	return wellTyped(t, ctx) && wellTyped(args, ctx) && wellTyped(block, ctx); 
+}
+
+public bool wellTyped(TInt(), Context ctx)   = true;
+public bool wellTyped(TBool(), Context ctx)  = true;
+public bool wellTyped(TUndef(), Context ctx) = true;
+public bool wellTyped(TError(), Context ctx) = false; 
+
+
+//public bool wellTyped(OberonProgram(list[Variable] vars, list[FDecl] fns, Statement block)){
+//	switch(<wellTyped(FDecl(rt),ctx), wellTyped(a,ctx), wellTyped(b,ctx)>) {
+//	    case <TBool(), true, true> : return true; 
+//	    case <TInt(), true, true> : return true; 
+//	    default : return false;
+//    }
+//}
+
+//public Expression eval(Invoke(n, pmts), Context ctx){
+//  FDecl f = lookup(n, ctx.fnDecls);
+//  ctx = notifyInvoke((a.pmtName : eval(b, ctx) | <a,b> <- zip(f.args, pmts)), ctx);
+//  ctx = execute(f.block, ctx);
+//  exp = top(ctx.heap)["return"];
+//  ctx = notifyReturn(ctx);
+//  return exp;
+//}
 

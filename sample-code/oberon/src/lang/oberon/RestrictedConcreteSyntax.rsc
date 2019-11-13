@@ -6,7 +6,7 @@ syntax Module = "MODULE" ID ";" "BEGIN" Statements "END" ID "."
 			  > "MODULE" ID ";" Procedures "BEGIN" Statements "END" ID "."
 			  > "MODULE" ID ";" Declarations "BEGIN" Statements "END" ID "."
 			  > "MODULE" ID ";" Procedures Declarations "BEGIN" Statements "END" ID "."
-			  ;			
+			  ;	
 
 syntax Procedures = ProcedureDeclaration+;
 
@@ -50,7 +50,7 @@ syntax ComposedExpression = SimpleExpression > SimpleExpression Relation SimpleE
 syntax SimpleExpression = Term 
 						| SimpleExpression AddOperator Term
 						> MINUS Term
-						| SimpleExpression AddOperator Term 
+						| MINUS SimpleExpression AddOperator Term 
 						;
 syntax Term = Factor > Term MulOperator Factor;
 

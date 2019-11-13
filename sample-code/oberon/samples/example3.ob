@@ -1,0 +1,12 @@
+MODULE Test;
+
+PROCEDURE inc : INTEGER (x: INTEGER);
+BEGIN
+    RETURN x + 1;
+END inc;
+
+BEGIN
+    VAR Y: INTEGER;
+	Y:= 0;
+	Y:= inc(Y);
+END Test.

@@ -32,6 +32,7 @@ data Expression = VarRef(Name name)
 				| LoEq(Expression lhs,Expression rhs)
 				| Eq(Expression lhs,Expression rhs)
 				| NEq(Expression lhs,Expression rhs)
+				| Neg(Expression exp)
 				| Invoke(Name name, Args pmts)
                 ;
                 

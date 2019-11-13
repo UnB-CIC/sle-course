@@ -10,10 +10,13 @@ import lang::util::Stack;
 import lang::oberon::ExecutionContext; 
 
 
+Expression defaultValue(TInt()) = IntValue(0); 
+Expression defaultValue(TBool()) = BoolValue(true); 
+
 public Expression fromVar(Variable v) {
   switch(v) {
-    case variableInit(n, _, val) : return val; 
-    default: return Undefined(); 
+    case variableInit(n, _, val) : return val;
+    case variable(n,t): return defaultValue(t);  
   }
 }
 
@@ -23,7 +26,7 @@ private map[str, FDecl] initFunctionDeclarations(list[FDecl] fs) = (f.name : f |
 public Context execute(program(vars, fns, block)) = 
   execute(block, context(initFunctionDeclarations(fns), initGlobal(vars), empty()));
 
-public Context execute(Assignment(n, e), ctx) {
+public Context execute(Assignment(n, e), Context ctx) {
 	if(n in top(ctx.heap)) {
 		return setLocal(n, e, ctx); 
 	}
@@ -68,7 +71,7 @@ public Context execute(BlockStmt([]), Context ctx) = ctx;
 
 public Context execute(BlockStmt([c,*cs]), Context ctx1) { 
   switch(c) {
-    case Return(e) : return execute(f); 
+    case Return(e) : return execute(Return(e),ctx1); 
     default: { 
        Context ctx2 = execute(c, ctx1); 
        return execute(BlockStmt(cs), ctx2); 
@@ -84,9 +87,9 @@ public Context execute(Print(e), Context ctx) {
   return ctx; 
 } 
 
-public Expression eval(IntValue(n), _) = IntValue(n);
+public Expression eval(IntValue(n), Context ctx) = IntValue(n);
 
-public Expression eval(BoolValue(v), _) = BoolValue(v);
+public Expression eval(BoolValue(v), Context ctx) = BoolValue(v);
 
 public Expression eval(Add(lhs, rhs), Context ctx) {
   switch(<eval(lhs, ctx), eval(rhs, ctx)>) {
