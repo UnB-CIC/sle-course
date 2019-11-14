@@ -42,3 +42,10 @@ public map[Name, &T] top(Stack[map[Name, &T]] heap) {
     default: return ();
   }
 }
+
+public FDecl lookup(Name n, map[str,FDecl] decls){
+  if(n in decls) {
+     return decls[n];
+  }
+  throw "Function <n> has not been declared"; 
+}

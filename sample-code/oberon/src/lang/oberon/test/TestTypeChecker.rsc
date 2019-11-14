@@ -6,17 +6,24 @@ import lang::oberon::Interpreter;
 import lang::util::Stack;
 import lang::oberon::Context;
 
+import IO;
+
+Expression returnExp = Add(VarRef("z"), IntValue(1));
+Statement retStmt = Return(returnExp);
+FDecl f = FDecl(TInt(), "inc", [Parameter("z", TInt())], retStmt); 
+
 Variable var = variable("x",TInt());
 Statement attrib1 = Assignment("x", IntValue(0));
 Statement stmt = Print(VarRef("x"));
 Expression exp = Lt(VarRef("x"),IntValue(10));
+Statement ret = Return(VarRef("x")); 
 Statement attrib2 = Assignment("x",Invoke("inc", [VarRef("x")]));
 Statement whileBlk = BlockStmt([stmt, attrib2]);
 Statement whileStmt = WhileStmt(exp,whileBlk);
 Statement mainBlock = BlockStmt([attrib1, whileStmt]);
 Expression undefined = Undefined();
 
-public Context[Type] testContext =  context((), ("x" : TInt()), empty());
+public Context[Type] testContext =  context(("inc": f), ("x" : TInt()), empty());
 
 public Context[Type] emptyContext =  context((), (), empty());
 
@@ -49,11 +56,33 @@ test bool testTypeOfVarRefExp() = TInt() == typeOf(VarRef("x"), testContext);
 
 //Statments tests
 
-//test bool testWellTypedWhileStmt() = true == wellTyped(WhileStmt(exp,stmt),testContext);
-//
-//test bool testWellTypedIfStmt() = true == wellTyped(IfStmt(BoolValue(true),attrib2),emptyContext);
-//
-//test bool testWellTypedIfElseStmt() = true == wellTyped(IfElseStmt(BoolValue(true),attrib1,attrib2),emptyContext);
+//test bool testWellTypedWhileStmt() { 
+//  try {
+//    wellTyped(WhileStmt(exp,stmt),testContext);
+//    return true;
+//  }
+//  catch e: {
+//    println(e); 
+//    return false;
+//  } 
+//}
+
+
+//test bool testWellTypedIfStmt() { 
+//  try { 
+//    wellTyped(IfStmt(BoolValue(true),attrib2),emptyContext);
+//    return true;
+//  } 
+//  catch e: {
+//    println(e); 
+//    return false; 
+//  }    
+//}
+
+test bool testWellTypedIfElseStmt() = 
+  testContext ==  wellTyped(IfElseStmt(BoolValue(true),attrib1,attrib2),testContext);
+
+
 //
 //test bool testWellTypedPrintStmt() = true == wellTyped(Print(IntValue(10)),emptyContext);
 //
@@ -64,6 +93,6 @@ test bool testTypeOfVarRefExp() = TInt() == typeOf(VarRef("x"), testContext);
 //test bool testWellTypedBlockStmt() = false == wellTyped(BlockStmt([stmt, Assignment("x", BoolValue(true))]),testContext);
 //
 //test bool testWellTypedVarDeclStmt() = true == wellTyped(VarDecl(var),emptyContext);
-//
-//
+
+
 

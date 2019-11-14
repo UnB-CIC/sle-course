@@ -179,12 +179,7 @@ public Expression eval(VarRef(n), Context[Expression] ctx) {
   throw nonDeclaredVariable(); 
 }
 
-public FDecl lookup(Name n, map[str,FDecl] decls){
-  if(n in decls) {
-     return decls[n];
-  }
-  throw "Function <n> has not been declared"; 
-}
+
 
 public Expression eval(Invoke(n, pmts), Context[Expression] ctx){
   FDecl f = lookup(n, ctx.fnDecls);
