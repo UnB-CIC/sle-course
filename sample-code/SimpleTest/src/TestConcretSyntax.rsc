@@ -18,7 +18,7 @@ test bool tc01() {
   return expected == transform(s1);
 }
 
-test bool tc01() {
+test bool tc02() {
   s1 = parse(#Statement, sample2); 
   
   return expected == transform(s1);
